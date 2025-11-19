@@ -1,6 +1,7 @@
 services:
   - type: web
     name: granabot-backend
+    root: backend
     env: node
     plan: free
     buildCommand: npm install && node prepare-deploy.js && npx prisma generate && npm run build
