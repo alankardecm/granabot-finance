@@ -22,11 +22,9 @@ services:
       - key: WEB_APP_URL
         sync: false
 
-  - type: static
-    name: granabot-frontend
+staticSites:
+  - name: granabot-frontend
     rootDir: frontend
-    env: static
-    plan: free
     buildCommand: npm install && npm run build
     publishDir: dist
     envVars:
@@ -35,7 +33,6 @@ services:
           type: web
           name: granabot-backend
           property: url
-          envVarKey: VITE_API_BASE_URL
     routes:
       - type: rewrite
         source: /*
