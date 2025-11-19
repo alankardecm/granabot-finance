@@ -4,8 +4,8 @@ services:
     rootDir: backend
     env: node
     plan: free
-    buildCommand: npm install && node prepare-deploy.js && npx prisma generate && npm run build
-    startCommand: npm run start:prod
+    buildCommand: npm install --include=dev && node prepare-deploy.js && npx prisma generate && npm run build
+    startCommand: npx prisma db push && npm run start:prod
     envVars:
       - key: NODE_ENV
         value: production
