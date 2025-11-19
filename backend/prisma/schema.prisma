@@ -1,0 +1,107 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum TransactionType {
+  RECEITA
+  DESPESA
+}
+
+model User {
+  id                  String                @id @default(uuid())
+  nome                String
+  email               String                @unique
+  senhaHash           String
+  telefone            String?
+  plano               String                @default("starter")
+  hashedRefreshToken  String?
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+
+  accounts            Account[]
+  transactions        Transaction[]
+  webhookKeys         WebhookKey[]
+  integrationConfig   IntegrationConfig?
+  passwordResetTokens PasswordResetToken[]
+}
+
+model Account {
+  id         String        @id @default(uuid())
+  userId     String
+  nome       String
+  tipo       String
+  moeda      String        @default("BRL")
+  externalId String?       @unique
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  webhookKeys  WebhookKey[]
+}
+
+model Transaction {
+  id                   String           @id @default(uuid())
+  accountId            String
+  userId               String
+  tipo                 TransactionType
+  descricao            String
+  categoria            String
+  valor                Decimal
+  dataLancamento       DateTime
+  estaPago             Boolean          @default(false)
+  origem               String           @default("manual_web")
+  identificadorExterno String?
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, accountId])
+  @@index([dataLancamento])
+  @@index([identificadorExterno])
+}
+
+model WebhookKey {
+  id        String   @id @default(uuid())
+  userId    String
+  accountId String
+  chave     String   @unique
+  descricao String?
+  ativo     Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+}
+
+model IntegrationConfig {
+  id                  String   @id @default(uuid())
+  userId              String   @unique
+  whatsappWebhookUrl  String?
+  whatsappApiToken    String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}

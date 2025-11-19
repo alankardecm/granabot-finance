@@ -1,0 +1,1714 @@
+{
+  "name": "Granabot- Telegram",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3622f3cc-acef-4129-ab1d-d823148c63a7",
+              "name": "texto",
+              "value": "={{ $('Telegram Trigger').item.json.message.text }}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1216,
+        80
+      ],
+      "id": "f92b9241-c996-4ae7-9628-36d7cfa674a0",
+      "name": "Edit Fields",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.texto }}",
+        "options": {
+          "systemMessage": "=## 🎯 Prompt do Agente Roteador — ZapGest\n\nVocê é um **agente roteador inteligente** do SaaS **ZapGest**. Sua única função é interpretar a **mensagem do usuário enviada via WhatsApp**, identificar **qual ferramenta deve ser acionada** e **responder apenas com o retorno gerado pela ferramenta** correspondente.\n\n---\n\n### 🧰 Ferramentas disponíveis:\n\n- **Registrar Transacao**  \n  Para registrar uma transação única.  \n  **Exemplos:**  \n  > \"Paguei 10\"  \n  > \"Gastei 50 reais com mercado hoje\"  \n  > \"Recebi 120 de um serviço de design\"\n  > Ou ao receber ao informações de transação entenda como uma.\n\n- **Deletar**  \n  Para apagar uma transação.  \n  **Exemplos:**  \n  > \"Apaga o gasto com cinema de ontem\"  \n  > \"Remove aquela entrada de 30 reais que registrei por engano\"\n\n- **Relatorios**  \n  Para gerar relatorios.  \n  **Exemplos:**  \n  > \"Quero um relatorio\"  \n  > \"Relatorios de hoje\"\n\n- **Generico**  \n  Para perguntas gerais e fora do escopo financeiro direto.  \n  **Exemplos:**  \n  > \"Como o GranaFy funciona?\"  \n  > \"Vocês têm suporte?\"  \n  > \"Consigo exportar meus dados?\"\n\n---\n\n### ⚙️ Regras do Agente:\n\n1. Interprete a mensagem e acione **apenas a ferramenta correta**.\n2. **NÃO responda nada além do retorno da ferramenta acionada**.\n3. Responda somente a resposta retornada pela ferramenta.\n3. NÃO misture categorias, como lembretes e transações."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1936,
+        192
+      ],
+      "id": "f487b874-4045-49c4-b2d0-14adbff9ec1a",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a1d15e5e-e0ac-47ce-a985-a672bb6411ae",
+              "leftValue": "={{ $('Buscar AccountId').item.json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -912,
+        448
+      ],
+      "id": "37da1aaf-e397-48a5-b990-905846796be8",
+      "name": "É cadastrado?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f9c7d85d-229f-4cde-84aa-2967370a6487",
+              "leftValue": "={{ $('Buscar AccountId').item.json.tem_plano }}",
+              "rightValue": "=ativo",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -512,
+        336
+      ],
+      "id": "6d400001-185b-46f1-b9e1-d93aec65e775",
+      2544,
+      192
+    ],
+    "id": "adc00cbf-3e0f-4d95-b349-22712a765473",
+    "name": "Atualizar Transactions",
+    "credentials": {
+      "supabaseApi": {
+        "id": "tys9uzTHEf1Tspmu",
+        "name": "Supabase account"
+      }
+    }
+  },
+  {
+    "parameters": {
+      "operation": "get",
+      "tableId": "usuarios",
+      "filters": {
+        "conditions": [
+          {
+            "keyName": "telegram_id",
+            "keyValue": "={{ $('Telegram Trigger').item.json.message.from.id }}\n\n"
+          }
+        ]
+      }
+    },
+    "type": "n8n-nodes-base.supabase",
+    "typeVersion": 1,
+    "position": [
+      -1344,
+      448
+    ],
+    "id": "7c94f75d-ffe8-4040-b979-328fa1aae755",
+    "name": "Buscar AccountId",
+    "alwaysOutputData": true,
+    "executeOnce": false,
+    "credentials": {
+      "supabaseApi": {
+        "id": "tys9uzTHEf1Tspmu",
+        "name": "Supabase account"
+      }
+    }
+  },
+  {
+    "parameters": {
+      "assignments": {
+        "assignments": [
+          {
+            "id": "b66e53e5-82a4-494a-b942-47dce1ab6ada",
+            "name": "texto",
+            "value": "={{ $('OpenAI').item.json.text }}\n",
+            "type": "string"
+          }
+        ]
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.set",
+    "typeVersion": 3.4,
+    "position": [
+      1472,
+      336
+    ],
+    "id": "2b8cce92-cba2-4ec6-a739-5edf2f5c0eca",
+    "name": "Edit Fields1",
+    "alwaysOutputData": false
+  },
+  {
+    "parameters": {
+      "resource": "audio",
+      "operation": "transcribe",
+      "binaryPropertyName": "audio_file",
+      "options": {}
+    },
+    "type": "@n8n/n8n-nodes-langchain.openAi",
+    "typeVersion": 1.8,
+    "position": [
+      1296,
+      336
+    ],
+    "id": "98e4ddeb-d497-45b8-816e-d4351dcd172d",
+    "name": "OpenAI",
+    "credentials": {
+      "openAiApi": {
+        "id": "Pvu7K2lRxp5Wesv0",
+        "name": "OpenAi account"
+      }
+    }
+  },
+  {
+    "parameters": {
+      "assignments": {
+        "assignments": [
+          {
+            "id": "09b89327-2e4d-4436-b0bc-1c8069a0d7cd",
+            "name": "texto",
+            "value": "=={{ $('OpenAI1').item.json.content }}\n",
+            "type": "string"
+          }
+        ]
+      },
+      "options": {}
+    },
+    "type": "n8n-nodes-base.set",
+    "typeVersion": 3.4,
+    "position": [
+      1472,
+      528
+    ],
+    "id": "36371c37-1cb1-45a0-87a1-51175cf96992",
+    "name": "Edit Fields4",
+    "alwaysOutputData": false
+  },
+  {
+    "parameters": {
+      "resource": "image",
+      "operation": "analyze",
+      "modelId": {
+        "__rl": true,
+        "value": "gpt-4o-mini",
+        "mode": "list",
+        "cachedResultName": "GPT-4O-MINI"
+      },
+      "text": "Extraia apenas o texto visível da imagem enviada. Não adicione interpretações, descrições ou comentários. Retorne somente o texto puro exatamente como aparece na imagem.",
+      "inputType": "base64",
+      "binaryPropertyName": "image_file",
+      "options": {}
+    },
+    "type": "@n8n/n8n-nodes-langchain.openAi",
+    "typeVersion": 1.8,
+    "position": [
+      1296,
+      528
+    ],
+    "id": "3e90c446-5e8e-428b-92aa-a124dad72ec4",
+    "name": "OpenAI1",
+    "credentials": {
+      "openAiApi": {
+        "id": "Pvu7K2lRxp5Wesv0",
+        "name": "OpenAi account"
+      }
+    }
+  },
+  {
+    "parameters": {},
+    "type": "@n8n/n8n-nodes-langchain.toolThink",
+    "typeVersion": 1,
+    "position": [
+      2000,
+      528
+    ],
+    "id": "6f6ca22e-5690-468e-ae26-ae44e1f682c9",
+    "name": "Think"
+  },
+  {
+    2624,
+    960
+  ],
+  "id": "6f4c7379-dcc4-480f-a3cf-4eff6507e2e0",
+  "name": "OpenAI Chat Model1",
+  "credentials": {
+    "openAiApi": {
+      "id": "Pvu7K2lRxp5Wesv0",
+      "name": "OpenAi account"
+    }
+  }
+},
+{
+  "parameters": {
+    "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+    "options": {
+      "systemMessage": "=Você é um agente responsável por registrar transações financeiras.\n\nSempre que receber uma nova transação, siga os seguintes passos:\n\n1. **Registrar transação:** Após obter a categoria (ou definir como `\"Padrão\"`), use a tool `Registrar` para salvar a transação.\n\n### Formato de resposta (sempre que a transação for registrada com sucesso):\n\n```\n✅ Transação registrada!\n\nID: {{ $('identificador').item.json.codigo }} | 💰 R${{valor}} | {{emoji}} {{tipo}}\n📄 Descrição: {{descrição}}(Detalhado - se não informado crie)\n📅 Data: {{data}}(Formato dd-mm-yyyy)\n📌 Status: Pago ou Pendente\n\n❌ Para excluir, envie: {{ $('identificador').item.json.codigo }}\n```\n\n**Legenda do emoji de tipo:**\n\n* 🔴 para **Despesa**\n* 🟢 para **Receita**\n\nData/Hora Atual: {{ $now }}"
+    }
+  },
+  "type": "@n8n/n8n-nodes-langchain.agentTool",
+  "typeVersion": 2.2,
+  "position": [
+    2272,
+  }
+},
+"type": "@n8n/n8n-nodes-langchain.agentTool",
+"typeVersion": 2.2,
+"position": [
+  2976,
+  432
+],
+"id": "5452135e-027d-4c96-bb9e-f646ca39cd12",
+"name": "Generico"
+},
+{
+"parameters": {
+  "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+  "options": {
+    "systemMessage": "=Você é um assistente responsável por **excluir transações do banco de dados**, com base nas mensagens enviadas pelo usuário.\n\n---\n\n### ✅ Suas responsabilidades:\n\n1. **Identificar o identificador da transação** na mensagem do usuário.\n\n   * O identificador é um código único como `PGP57`, `XVI06M`, `WPY12T-1`, etc.\n\n2. **Se o identificador for encontrado**, utilize a ferramenta:\n\n   ```\n   Tool: Excluir\n   ```\n\n   * Envie o identificador como parâmetro para excluir a transação correspondente no banco de dados.\n\n3. Após a exclusão, **retorne a seguinte resposta formatada** com os dados da transação:\n\n```text\nFoi excluída a transação IDENTIFIER  \n🔖 *Descrição:* DESCRIPTION  \n💸 *Valor:* R$ AMOUNT\n```\n\n> **Substitua:**\n>\n> * `IDENTIFIER` pelo código da transação (ex: `PGP57`)\n> * `DESCRIPTION` pela descrição fornecida (ex: `Pagamento: R$199.`)\n> * `AMOUNT` pelo valor numérico com 2 casas decimais (ex: `199,00`)\n\n4. **Se nenhum identificador for encontrado**, **não execute nenhuma ação** e não retorne mensagem de exclusão.\n\n---\n\n### 🧾 Exemplo de mensagem do usuário:\n\n> \"Apagar a transação pgp57\"\n\n→ O assistente deve:\n\n* Detectar o identificador: `pgp57`\n* Usar a tool `Excluir` com esse identificador\n* Retornar:\n\n```text\nFoi excluída a transação 'identificador'  \n🔖 *Descrição:* 'descrição'.  \n💸 *Valor:* R$ 'valor'\n```"
+  }
+},
+"type": "@n8n/n8n-nodes-langchain.agentTool",
+"typeVersion": 2.2,
+"position": [
+  2624,
+  432
+],
+"id": "e4685bf5-b72a-4cc9-bcc2-7d164a111776",
+"name": "Deletar"
+},
+{
+"parameters": {
+  "operation": "delete",
+  "tableId": "transacoes",
+  "matchType": "allFilters",
+  "filters": {
+    "conditions": [
+      {
+        "keyName": "user_id",
+        "condition": "eq",
+        "keyValue": "={{ $('user_id').item.json.user_id }}"
+      },
+      {
+        "keyName": "identificador",
+        "condition": "eq",
+        "keyValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('conditions1_Field_Value', `Identificador da transacao`, 'string') }}"
+      }
+    ]
+  }
+},
+"type": "n8n-nodes-base.supabaseTool",
+"typeVersion": 1,
+"position": [
+  2896,
+  592
+],
+"id": "81996fb0-d3c1-420e-a706-4642bda5f639",
+"name": "Excluir",
+"credentials": {
+  "supabaseApi": {
+    "id": "tys9uzTHEf1Tspmu",
+    "name": "Supabase account"
+  }
+}
+},
+{
+"parameters": {
+  "assignments": {
+    "assignments": [
+      {
+        "id": "477f75c4-56f8-4a7f-a25a-f0d49fedab25",
+        "name": "telegram_id",
+        "value": "=={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "type": "string"
+      },
+      {
+        "id": "082dc8b3-3327-4231-a3c2-ec925658fd54",
+        "name": "username",
+        "value": "=={{ $('Telegram Trigger').item.json.message.from.username || 'sem_username' }}",
+        "type": "string"
+      },
+      {
+        "id": "a0f61f02-57a1-4b00-8028-a43f1888c8ae",
+        "name": "chat_id",
+        "value": "=={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "type": "string"
+      }
+    ]
+  },
+  "options": {}
+},
+"type": "n8n-nodes-base.set",
+"typeVersion": 3.4,
+"position": [
+  -1568,
+  448
+],
+"id": "b615d069-7415-4bef-88bc-5669e69f9109",
+"name": "Numero"
+},
+{
+"parameters": {
+  "assignments": {
+    "assignments": [
+      {
+        "id": "7f98ac95-b832-4085-871b-2a14d6cd0bde",
+        "name": "user_id",
+        "value": "={{ $json.id }}",
+        "type": "string"
+      }
+    ]
+  },
+  "options": {}
+},
+"type": "n8n-nodes-base.set",
+"typeVersion": 3.4,
+"position": [
+  -1136,
+  448
+],
+"id": "f9db1ff9-1303-4d9f-af8d-83fc2a9de957",
+"name": "user_id"
+},
+{
+"parameters": {
+  "model": {
+    "__rl": true,
+    "mode": "list",
+    "value": "gpt-4.1-mini"
+  },
+  "options": {}
+},
+"type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+"typeVersion": 1.2,
+"position": [
+  1808,
+  400
+],
+"id": "5c2a3f7f-3062-430b-ba23-01bb80ecaeef",
+"name": "OpenAI Chat Model",
+"credentials": {
+  "openAiApi": {
+    "id": "Pvu7K2lRxp5Wesv0",
+    "name": "OpenAi account"
+  }
+}
+},
+{
+"parameters": {
+  "jsCode": "// Função para gerar uma string aleatória com letras maiúsculas e números\nfunction gerarCodigo(tamanho) {\n  const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';\n  let resultado = '';\n  for (let i = 0; i < tamanho; i++) {\n    const index = Math.floor(Math.random() * caracteres.length);\n    resultado += caracteres[index];\n  }\n  return resultado;\n}\n\n// Retorna o código gerado no formato desejado\nreturn [\n  {\n    json: {\n      codigo: gerarCodigo(3),\n    },\n  },\n];\n"
+},
+"type": "n8n-nodes-base.code",
+"typeVersion": 2,
+"position": [
+  128,
+  96
+],
+"id": "6af5474d-a69b-4f9f-9cec-35f403898ce3",
+"name": "identificador"
+},
+{
+"parameters": {
+  "operation": "getAll",
+  "tableId": "transacoes",
+  "filters": {
+    "conditions": [
+      {
+        "keyName": "user_id",
+        "condition": "eq",
+        "keyValue": "={{ $('user_id').item.json.user_id }}"
+      }
+    ]
+  }
+},
+"type": "n8n-nodes-base.supabaseTool",
+"typeVersion": 1,
+"position": [
+  3520,
+  592
+],
+"id": "5ee03c86-85e2-4aac-bfae-28fa37146430",
+"name": "buscar_transacoes",
+"credentials": {
+  "supabaseApi": {
+    "id": "tys9uzTHEf1Tspmu",
+    "name": "Supabase account"
+  }
+}
+},
+{
+"parameters": {
+  "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+  "options": {
+    "systemMessage": "=Você é o GranaBot, um assistente financeiro inteligente que opera via Telegram/WhatsApp. Você ajuda usuários a entenderem suas finanças de forma clara e acionável.\n\n## 🎯 MODO DE OPERAÇÃO\n\nVocê tem 2 modos principais:\n\n### MODO 1: Relatório Inicial (Automático)\nQuando o usuário pedir \"relatório\", gere o relatório financeiro completo.\n\n### MODO 2: Interativo (Sob Demanda)\nApós enviar o relatório, você pode responder a perguntas específicas sobre os dados.\n\n---\n\n## 📊 FORMATO DO RELATÓRIO INICIAL\n\nUse SEMPRE esta estrutura:\n\n```\n🔒 *RELATÓRIO FINANCEIRO*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n📊 *RESUMO GERAL*\n\n🟢 Receitas: R$ [VALOR FORMATADO]\n🔴 Despesas: R$ [VALOR FORMATADO]\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n💰 Saldo: R$ [VALOR FORMATADO]\n\n[SE SALDO > 0: \"✅ Saldo positivo!\"]\n[SE SALDO < 0: \"⚠️ Você gastou R$ [valor] a mais!\"]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📋 *GASTOS POR CATEGORIA*\n\n[LISTAR TOP 5 CATEGORIAS COM VALORES E PERCENTUAIS]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📈 *TOP 3 MAIORES GASTOS*\n\n1. [EMOJI] [DESCRIÇÃO] - R$ [VALOR]\n2. [EMOJI] [DESCRIÇÃO] - R$ [VALOR]\n3. [EMOJI] [DESCRIÇÃO] - R$ [VALOR]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n💡 *ANÁLISE RÁPIDA*\n\n[GERE 2-3 INSIGHTS AUTOMÁTICOS BASEADOS NOS DADOS]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📅 Total: [NÚMERO] transações\n📆 Gerado em: [DATA HORA]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n💬 *QUER MAIS DETALHES?*\n\nDigite:\n• \"Detalhar [categoria]\" - Ver todas as transações\n• \"Listar tudo\" - Todas as transações detalhadas\n• \"Dicas de economia\" - Sugestões personalizadas\n• \"Comparar mês passado\" - Análise temporal\n• \"Gastos acima de [valor]\" - Filtrar por valor\n```\n\n---\n\n## 🎨 REGRAS DE FORMATAÇÃO\n\n### Valores Monetários (CRÍTICO):\n- Separador de milhares: PONTO (.)\n- Separador de decimais: VÍRGULA (,)\n- Sempre 2 casas decimais\n\n**Exemplos Corretos:**\n- R$ 1.234,56 ✅\n- R$ 25.150,00 ✅\n- R$ 100,00 ✅\n\n**Exemplos INCORRETOS (NÃO USE):**\n- R$ 1234,56 ❌\n- R$ 25150.00 ❌\n- R$ 100 ❌\n\n### Emojis por Categoria:\n- Alimentação: 🍽️\n- Transporte: 🚗\n- Saúde: 🏥\n- Moradia: 🏠\n- Lazer: 🎮\n- Educação: 📚\n- Vestuário: 👔\n- Outros: 🛒\n\n---\n\n## 🔄 COMANDOS INTERATIVOS\n\nQuando o usuário enviar comandos após o relatório:\n\n### 1️⃣ \"Detalhar [categoria]\" ou \"Ver [categoria]\"\n\n**Ação:** Use `buscar_transacoes` filtrando pela categoria específica\n\n**Formato de resposta:**\n```\n🍽️ *DETALHAMENTO - ALIMENTAÇÃO*\n\nTotal gasto: R$ [VALOR]\nNúmero de transações: [N]\n\n📋 *LISTA COMPLETA:*\n\n12/11 - Restaurante - R$ 61,00\n12/11 - Supermercado - R$ 89,00\n13/11 - Padaria - R$ 25,00\n...\n\n💡 *Dica:* Você gastou R$ [valor] em alimentação. \nA média nacional é R$ 600/mês.\n```\n\n### 2️⃣ \"Listar tudo\" ou \"Ver todas\"\n\n**Ação:** Mostre TODAS as transações organizadas por data\n\n**Formato:**\n```\n📋 *TODAS AS TRANSAÇÕES*\n\n*12/11/2025*\n🔴 Restaurante - R$ 61,00\n🔴 Comida - R$ 89,00\n🟢 Salário - R$ 10.000,00\n\n*13/11/2025*\n🔴 Gasolina - R$ 50,00\n...\n```\n\n### 3️⃣ \"Dicas de economia\" ou \"Como economizar?\"\n\n**Ação:** Analise os dados e gere sugestões PERSONALIZADAS\n\n**Formato:**\n```\n💡 *DICAS PERSONALIZADAS DE ECONOMIA*\n\nCom base nos seus gastos, veja onde pode otimizar:\n\n1. 🍽️ *Alimentação (R$ 268,80)*\n   • Você gastou 45% do esperado\n   • Continue assim! ✅\n   \n2. 🚗 *Transporte (R$ 30.150,00)*\n   • Maior gasto foi compra do carro\n   • Isso é investimento único? Se não, revise!\n   \n3. 🏥 *Saúde (R$ 167,03)*\n   • Gastos com farmácia: R$ 98,75\n   • Considere farmácia popular (economia de 40%)\n\n💰 *Potencial de economia: R$ [calcular] por mês*\n```\n\n### 4️⃣ \"Comparar mês passado\" ou \"Comparativo\"\n\n**Ação:** Use `buscar_transacoes` do mês anterior e compare\n\n**Formato:**\n```\n📊 *COMPARATIVO MENSAL*\n\n              Mês Atual | Mês Anterior | Diferença\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🟢 Receitas   R$ 25.150 | R$ 22.000    | +14% ✅\n🔴 Despesas   R$ 3.809  | R$ 4.500     | -15% ✅\n💰 Saldo      R$ 21.340 | R$ 17.500    | +22% ✅\n\n🎯 *Principais mudanças:*\n• Receitas aumentaram R$ 3.150\n• Despesas diminuíram R$ 691\n• Você economizou 15% este mês! 🎉\n\n📋 *Por categoria:*\n🍽️ Alimentação: -12% (economizou R$ 100)\n🚗 Transporte: +300% (comprou carro)\n🏥 Saúde: +5% (leve aumento)\n```\n\n### 5️⃣ \"Gastos acima de [valor]\" ou \"Filtrar [valor]\"\n\n**Ação:** Filtre transações com valor > threshold\n\n**Formato:**\n```\n🔍 *GASTOS ACIMA DE R$ 100,00*\n\nEncontradas [N] transações:\n\n1. 🚗 Compra do carro - R$ 30.000,00\n2. 🏥 Medicamentos - R$ 6.540,00\n3. 💼 Serviço prestado - R$ 15.000,00 (receita)\n\n💰 Total em despesas > R$ 100: R$ [SOMA]\n```\n\n### 6️⃣ \"Exportar\" ou \"Gerar Excel\"\n\n**Ação:** Informe que vai gerar arquivo (simule ou integre se houver tool)\n\n**Formato:**\n```\n📄 *EXPORTAÇÃO DE DADOS*\n\nGerando sua planilha Excel...\n\n✅ Arquivo gerado com:\n• Todas as [N] transações\n• Resumo por categoria\n• Gráficos automáticos\n\n📧 Enviando para seu email...\n[SE TIVER INTEGRAÇÃO: enviar arquivo]\n[SE NÃO: \"Funcionalidade em desenvolvimento!\"]\n```\n\n### 7️⃣ \"Ajuda\" ou \"Comandos\"\n\n**Formato:**\n```\n❓ *COMANDOS DISPONÍVEIS*\n\n📊 *Análise:*\n• \"Detalhar [categoria]\" - Ver transações da categoria\n• \"Listar tudo\" - Todas as transações\n• \"Comparar mês passado\" - Análise temporal\n\n🔍 *Filtros:*\n• \"Gastos acima de [valor]\" - Filtrar por valor\n• \"Transações do dia [data]\" - Ver dia específico\n\n💡 *Insights:*\n• \"Dicas de economia\" - Sugestões personalizadas\n• \"Como economizar?\" - Análise de otimização\n\n📄 *Exportação:*\n• \"Exportar\" - Gerar Excel (em desenvolvimento)\n\n💬 Pergunte qualquer coisa sobre suas finanças!\n```\n\n---\n\n## 🤖 ANÁLISE INTELIGENTE AUTOMÁTICA\n\nNo relatório inicial, SEMPRE gere insights baseados nos dados:\n\n### Se saldo negativo:\n```\n⚠️ Atenção! Você gastou R$ X a mais que recebeu.\nPrincipais causas:\n1. [MAIOR GASTO] - R$ [VALOR]\n2. [SEGUNDA MAIOR] - R$ [VALOR]\n\n💡 Dica: Se [MAIOR GASTO] for recorrente, considere revisar.\n```\n\n### Se categoria muito alta:\n```\n📊 [CATEGORIA] representa [X]% dos seus gastos!\nMédia nacional: [Y]%\nVocê está [Z]% acima/abaixo da média.\n```\n\n### Se houver padrão interessante:\n```\n🎯 Percebi que você gasta mais em [DIA DA SEMANA].\nGasto médio em [dia]: R$ [valor]\nVs. outros dias: R$ [valor]\n```\n\n---\n\n## ⚙️ REGRAS TÉCNICAS\n\n### Tools Disponíveis:\n- `buscar_transacoes`: Buscar transações do Supabase\n  * Pode filtrar por: categoria, data, tipo, valor mínimo/máximo\n\n### Execução:\n- Execute cada tool APENAS UMA VEZ por comando\n- Sempre formate valores antes de mostrar\n- Mantenha contexto da conversa (memória)\n- Se não tiver dados, informe claramente\n\n### Limitações:\n- Máximo 50 transações por listagem (para não sobrecarregar)\n- Se houver mais, informe: \"Mostrando as 50 mais recentes. Digite 'próximas 50' para ver mais.\"\n\n---\n\n## 🎯 PERSONALIDADE\n\n- **Tom:** Amigável, prestativo, profissional\n- **Estilo:** Direto, claro, visual (use emojis)\n- **Objetivo:** Ajudar o usuário a entender e melhorar suas finanças\n- **Nunca:** Julgar gastos, ser condescendente\n- **Sempre:** Ser encorajador, educativo, acionável\n\n---\n## ⚠️ LIMITAÇÕES ATUAIS\n\nVocê NÃO deve prometer funcionalidades que não existem:\n\n❌ NÃO OFEREÇA:\n- Criar orçamentos/metas (ainda não implementado)\n- Criar lembretes de contas (ainda não implementado)\n- Notificações automáticas (ainda não implementado)\n- Integração bancária (ainda não implementado)\n\n✅ OFEREÇA APENAS:\n- Análise de transações existentes\n- Relatórios e insights\n- Comandos interativos disponíveis\n- Dicas genéricas de economia\n\n**Se usuário pedir algo não disponível:**\n\"Essa funcionalidade está no nosso roadmap! 🚀\nPor enquanto, posso te ajudar com:\n- Análise dos seus gastos\n- Relatórios detalhados\n- Dicas de economia\n- Filtros e comparativos\"\n```\n\n---\n\n## 💰 **ESTRATÉGIA DE MONETIZAÇÃO:**\n\n### **Planos Atuais (MVP):**\n```\nStarter (R$ 29,90):\n✅ 500 mensagens\n✅ Relatórios básicos\n\nPro (R$ 69,90):\n✅ 2000 mensagens\n✅ Relatórios avançados\n✅ Exportação\n\nBusiness (R$ 149,90):\n✅ 10000 mensagens\n✅ API\n✅ Multi-usuários\n```\n\n### **Planos Futuros (com funcionalidades novas):**\n```\nPremium (R$ 99,90):\n✅ Tudo do Pro +\n✅ Metas e Orçamentos 🆕\n✅ Lembretes automáticos 🆕\n✅ Notificações push 🆕\n\nEnterprise (R$ 299,90):\n✅ Tudo do Premium +\n✅ Integração bancária 🆕\n✅ Previsões com IA 🆕\n✅ Relatórios customizados 🆕\n\n## 📌 LEMBRETE FINAL\n\n**SEMPRE:**\n✅ Formate valores no padrão brasileiro (R$ 1.234,56)\n✅ Use emojis para facilitar leitura\n✅ Seja claro e objetivo\n✅ Ofereça próximos passos acionáveis\n✅ Mantenha o tom profissional mas amigável\n\n**NUNCA:**\n❌ Mostre valores como \"undefined\" ou \"null\"\n❌ Faça múltiplas chamadas desnecessárias\n❌ Repita informações já mostradas\n❌ Seja vago ou genérico demais\n\nData/Hora atual: {{$now}}",
+    "maxIterations": 5,
+    "returnIntermediateSteps": true,
+    "passthroughBinaryImages": true
+  }
+},
+"type": "@n8n/n8n-nodes-langchain.agentTool",
+"typeVersion": 2.2,
+"position": [
+  3312,
+  432
+],
+"id": "d80ba913-f65c-4500-8c09-e7c651bc927c",
+"name": "Relatorios"
+},
+{
+"parameters": {
+  "rules": {
+    "values": [
+      {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.evento }}",
+              "rightValue": "SALE_APPROVED",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "id": "ad4c172f-52f6-46e9-b5e6-2dce75d6001b"
+            }
+          ],
+          "combinator": "and"
+        },
+        "renameOutput": true,
+        "outputKey": "Compra aprovada"
+      },
+      {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "bdb78448-6a41-4387-b6f9-cb653cfd311a",
+              "leftValue": "={{ $json.evento }}",
+              "rightValue": "SUBSCRIPTION_RENEWED",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "renameOutput": true,
+        "outputKey": "Renovada"
+      },
+      {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7220f292-94b3-42a9-9271-0a199a58eff9",
+              "leftValue": "={{ $json.evento }}",
+              "rightValue": "SUBSCRIPTION_CANCELED",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "renameOutput": true,
+        "outputKey": "Cancelado"
+      }
+    ]
+  },
+  "options": {}
+},
+"type": "n8n-nodes-base.switch",
+"typeVersion": 3.2,
+"position": [
+  -1312,
+  1552
+],
+"id": "9926ceda-d34f-47f1-a27d-642fc43ccf5c",
+"name": "Switch"
+},
+{
+"parameters": {
+  "operation": "get",
+  "tableId": "usuarios",
+  "filters": {
+    "conditions": [
+      {
+        "keyName": "email",
+        "keyValue": "={{ $json.email }}"
+      }
+    ]
+  }
+},
+"type": "n8n-nodes-base.supabase",
+"typeVersion": 1,
+"position": [
+  -1008,
+  1440
+],
+"id": "3a1fa44b-f64b-4a2b-bbaa-0b5d8c88056b",
+"name": "Get a row",
+"alwaysOutputData": true,
+"credentials": {
+  "supabaseApi": {
+    "id": "tys9uzTHEf1Tspmu",
+    "name": "Supabase account"
+  }
+}
+},
+{
+"parameters": {
+  "conditions": {
+    "options": {
+      "caseSensitive": true,
+      "leftValue": "",
+      "typeValidation": "strict",
+      "version": 2
+    },
+    "conditions": [
+      {
+        "id": "7653c2b6-e7c2-4ab1-904a-26fd6c04e58f",
+        "leftValue": "={{ $json.id }}",
+        "rightValue": "",
+        "operator": {
+          "type": "number",
+          "operation": "exists",
+          "singleValue": true
+        }
+      }
+    ],
+    "combinator": "and"
+  },
+  "options": {}
+},
+"type": "n8n-nodes-base.if",
+"typeVersion": 2.2,
+"position": [
+  -800,
+  1440
+],
+"id": "c904cd1c-acfa-432f-9db2-7c6881a82ba3",
+"name": "If"
+},
+{
+"parameters": {
+  "operation": "update",
+  "tableId": "usuarios",
+  "filters": {
+    "conditions": [
+      {
+        "keyName": "id",
+        "condition": "eq",
+        "keyValue": "={{ $('Get a row').item.json.id }}"
+      }
+    ]
+  },
+  "fieldsUi": {
+    "fieldValues": [
+      {
+        "fieldId": "tem_plano",
+        "fieldValue": "true"
+      }
+    ]
+  }
+},
+"type": "n8n-nodes-base.supabase",
+"typeVersion": 1,
+"position": [
+  -592,
+  1344
+],
+"id": "85454809-e1a4-4f2d-b959-74ebe962975d",
+"name": "Update a row1",
+"credentials": {
+  "supabaseApi": {
+    "id": "tys9uzTHEf1Tspmu",
+    "name": "Supabase account"
+  }
+}
+},
+{
+"parameters": {
+  "operation": "get",
+  "tableId": "usuarios",
+  "filters": {
+    "conditions": [
+      {
+        "keyName": "email",
+        "keyValue": "={{ $json.email }}"
+      }
+    ]
+  }
+},
+"type": "n8n-nodes-base.supabase",
+"typeVersion": 1,
+"position": [
+  -1008,
+  1744
+],
+"id": "375fa42c-176a-4780-b57d-e6e3321add79",
+"name": "Get a row1",
+"alwaysOutputData": true,
+"credentials": {
+  "supabaseApi": {
+    "id": "tys9uzTHEf1Tspmu",
+    "name": "Supabase account"
+  }
+}
+},
+{
+"parameters": {
+  "operation": "update",
+  "tableId": "usuarios",
+  "filters": {
+    "conditions": [
+      {
+        "keyName": "id",
+        "condition": "eq",
+        "keyValue": "={{ $json.id }}"
+      }
+    ]
+  },
+  "fieldsUi": {
+    "fieldValues": [
+      {
+        "fieldId": "tem_plano",
+        "fieldValue": "false"
+      }
+    ]
+  }
+},
+"type": "n8n-nodes-base.supabase",
+"typeVersion": 1,
+"position": [
+  -800,
+  1744
+],
+"id": "65e59b5b-1487-4e5d-aacc-4be3f315df91",
+"name": "Update a row2",
+"credentials": {
+  "supabaseApi": {
+    "id": "tys9uzTHEf1Tspmu",
+    "name": "Supabase account"
+  }
+}
+},
+{
+"parameters": {
+  "httpMethod": "POST",
+  "path": "kirvano",
+  "options": {}
+},
+"type": "n8n-nodes-base.webhook",
+"typeVersion": 2.1,
+"position": [
+  -1856,
+  1568
+],
+"id": "928ab6af-c25e-4f77-a54d-7885cf2007c5",
+"name": "Webhook1",
+"webhookId": "7c012a98-e6d6-4b5a-9f54-077116cbcbe0"
+},
+{
+"parameters": {
+  "assignments": {
+    "assignments": [
+      {
+        "id": "e411fe33-856f-4090-ada3-27038864c04d",
+        "name": "evento",
+        "value": "={{ $json.body.event }}",
+        "type": "string"
+      },
+      {
+        "id": "a5124ee9-27f7-4110-9d86-8d80549b728c",
+        "name": "nome",
+        "value": "={{ $json.body.customer.name }}",
+        "type": "string"
+      },
+      {
+        "id": "75936929-4a0e-4965-95f8-e7f251492797",
+        "name": "email",
+        "value": "={{ $json.body.customer.email }}",
+        "type": "string"
+      },
+      {
+        "id": "8f585791-f7ab-495e-bb61-688a6a95a7e1",
+        "name": "numero",
+        "value": "={{ $json.body.customer.phone_number }}",
+        "type": "string"
+      },
+      {
+        "id": "e5e20160-4446-44c8-9888-54136a46cfab",
+        "name": "plano",
+        "value": "={{ $json.body.plan.name }}",
+        "type": "string"
+      },
+      {
+        "id": "c0d77652-02a8-4c5e-ab52-481dba39bb57",
+        "name": "chat_id",
+        "value": "=={{ $json.body.item.json.message.chat.id }}",
+        "type": "string"
+      }
+    ]
+  },
+  "options": {}
+},
+"type": "n8n-nodes-base.set",
+"typeVersion": 3.4,
+"position": [
+  -1520,
+  1568
+],
+"id": "ea317f7b-48aa-467d-a93e-e4eb6be607db",
+"name": "Edit Fields3"
+},
+{
+"parameters": {
+  "tableId": "usuarios",
+  "fieldsUi": {
+    "fieldValues": [
+      {
+        "fieldId": "nome",
+        "fieldValue": "={{ $('Edit Fields3').item.json.nome }}"
+      },
+      {
+        "fieldId": "telefone",
+        "fieldValue": "={{ $('Edit Fields3').item.json.numero }}"
+      },
+      {
+        "fieldId": "email",
+        "fieldValue": "={{ $('Edit Fields3').item.json.email }}"
+      },
+      {
+        "fieldId": "tem_plano",
+        "fieldValue": "true"
+      },
+      {
+        "fieldId": "mensagens",
+        "fieldValue": "0"
+      }
+    ]
+  }
+},
+"type": "n8n-nodes-base.supabase",
+"typeVersion": 1,
+"position": [
+  -592,
+  1536
+],
+"id": "56a27723-825f-4177-8a70-9322d3c56c29",
+"name": "Create a row",
+"credentials": {
+  "supabaseApi": {
+    "id": "tys9uzTHEf1Tspmu",
+    "name": "Supabase account"
+  }
+}
+},
+{
+"parameters": {
+  "operation": "executeQuery",
+  "query": "CREATE TABLE public.usuarios (\n  id BIGSERIAL PRIMARY KEY,\n  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),\n  nome TEXT,\n  telefone TEXT,\n  email TEXT,\n  mensagens NUMERIC,\n  tem_plano BOOLEAN\n);\n\nCREATE TABLE public.transacoes (\n  id BIGSERIAL PRIMARY KEY,\n  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),\n  descricao TEXT,\n  valor NUMERIC,\n  tipo TEXT,\n  data DATE,\n  esta_pago BOOLEAN,\n  user_id BIGINT REFERENCES public.usuarios(id) ON DELETE SET NULL,\n  identificador TEXT,\n  time NUMERIC\n);\n",
+  "options": {}
+},
+"type": "n8n-nodes-base.postgres",
+"typeVersion": 2.6,
+"position": [
+  -1728,
+  128
+],
+"id": "a945e45b-9d98-4bc7-8f49-9ec88129bad0",
+"name": "Execute a SQL query"
+},
+{
+"parameters": {
+  "content": "# Texto/Audio/Imagem",
+  "height": 704,
+  "width": 1328,
+  "color": 5
+},
+"type": "n8n-nodes-base.stickyNote",
+"position": [
+  432,
+  32
+],
+"typeVersion": 1,
+"id": "4784ffda-dd12-470d-88c2-1bba8dc63d94",
+"name": "Sticky Note"
+},
+{
+"parameters": {
+  "content": "# Gerar identificador",
+  "height": 256,
+  "width": 352
+},
+"type": "n8n-nodes-base.stickyNote",
+"position": [
+  0,
+  0
+],
+"typeVersion": 1,
+"id": "a1d30433-6840-4a27-8869-2cefc228fb1f",
+"name": "Sticky Note1"
+},
+{
+"parameters": {
+  "assignments": {
+    "assignments": [
+      {
+        "id": "616e2670-b0e5-415d-9af7-3b6e9d04dddb",
+        "name": "text",
+        "value": "⚠️ Atenção! ⚠️   Detectamos que você atingiu o limite de transações do seu plano atual. 😔  Para continuar usando nossos serviços sem interrupções, recomendamos que você atualize seu plano para um que atenda melhor às suas necessidades. 🚀💳  Acesse o link abaixo para conferir as opções disponíveis e fazer o upgrade: 🔗 https://zapgest.com/planos  Se precisar de ajuda, estou aqui para te auxiliar! 🧡",
+        "type": "string"
+      }
+    ]
+  },
+  "options": {}
+},
+"type": "n8n-nodes-base.set",
+"typeVersion": 3.4,
+"position": [
+  -208,
+  432
+],
+"id": "4710c770-9ba7-4782-80c5-a9288a9e0cc2",
+"name": "atingiu limite"
+},
+{
+"parameters": {
+  "assignments": {
+    "assignments": [
+      {
+        "id": "143d2810-1464-4302-b15b-1f1829808bf4",
+        "name": "text",
+        "value": "Oi! Sou seu assistente financeiro aqui na ZapGest 🧡, pronto pra te ajudar a organizar a grana do jeito mais simples possível! Bora deixar sua vida financeira nos trilhos? Ah, e pode ficar tranquilo: se cadastre sempre → https://zapgest.com",
+        "type": "string"
+      }
+    ]
+  },
+  "options": {}
+},
+"type": "n8n-nodes-base.set",
+"typeVersion": 3.4,
+"position": [
+  -528,
+  672
+],
+"id": "85fc17f5-a96c-4f5b-b1bb-a3e110096e90",
+"name": "sem cadastro"
+},
+{
+"parameters": {
+  "content": "# Resposta Telegram",
+  "height": 256,
+  "width": 384
+},
+"type": "n8n-nodes-base.stickyNote",
+"position": [
+  2304,
+  112
+],
+"typeVersion": 1,
+"id": "159b79bd-5014-445b-b493-714d0223d680",
+"name": "Sticky Note2"
+},
+{
+"parameters": {
+  "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}\n",
+  "text": "={{ $('AI Agent').item.json.output }}\n",
+  "additionalFields": {}
+},
+"type": "n8n-nodes-base.telegram",
+"typeVersion": 1.2,
+"position": [
+  2336,
+  192
+],
+"id": "58958efc-f48f-4f47-aeb6-5d4e3f6962dd",
+"name": "Send a text message",
+"webhookId": "14467974-842d-4471-9d81-f79eaa45cab6",
+"credentials": {
+  "telegramApi": {
+    "id": "lEl65I0lXE4pBVHv",
+    "name": "Telegram account 2"
+  }
+}
+},
+{
+"parameters": {
+  "rules": {
+    "values": [
+      {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e2d7ea58-bca6-4f0e-b1e9-9ac4be8d7034",
+              "leftValue": "={{ $('Telegram Trigger').item.json.message.voice }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "renameOutput": true,
+        "outputKey": "Audio"
+      },
+      {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "36a1c32c-6477-4104-9a29-569aafe652f6",
+              "leftValue": "={{ $('Telegram Trigger').item.json.message.photo }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "renameOutput": true,
+        "outputKey": "Imagem"
+      },
+      {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "id": "6594bd94-45bb-46b9-ad2e-5177ba38e5e9"
+            }
+          ],
+          "combinator": "and"
+        },
+        "renameOutput": true,
+        "outputKey": "Texto"
+      }
+    ]
+  },
+  "looseTypeValidation": true,
+  "options": {}
+},
+"type": "n8n-nodes-base.switch",
+"typeVersion": 3.3,
+"position": [
+  464,
+  224
+],
+"id": "50f2cb1f-151d-413b-9595-fdccda065303",
+"name": "Switch1"
+},
+{
+"parameters": {
+  "updates": [
+    "message"
+  ],
+  "additionalFields": {}
+},
+"type": "n8n-nodes-base.telegramTrigger",
+"typeVersion": 1.2,
+"position": [
+  -1840,
+  448
+],
+"id": "65a4c22d-75cd-4923-a880-a37c89086a53",
+"name": "Telegram Trigger",
+"webhookId": "e3a7cba9-05a5-4778-89e7-406ef699e920",
+"credentials": {
+  "telegramApi": {
+    "id": "ixm2uWGEl9n2E9c9",
+    "name": "Bot Finan IA (Correto)"
+  }
+}
+},
+{
+"parameters": {
+  "url": "=https://api.telegram.org/bot8414196696:AAHDyRYo7HU89iUKFw_dG5XtMfvsyUFWZgk/getFile?file_id={{ $('Telegram Trigger').item.json.message.photo[$('Telegram Trigger').item.json.message.photo.length - 1].file_id }}",
+  "options": {}
+},
+"type": "n8n-nodes-base.httpRequest",
+"typeVersion": 4.3,
+"position": [
+  608,
+  512
+],
+"id": "20783e25-f321-4b51-9e4c-c208a4f36428",
+"name": "Get File Path"
+},
+{
+"parameters": {
+  "url": "=https://api.telegram.org/file/bot8414196696:AAHDyRYo7HU89iUKFw_dG5XtMfvsyUFWZgk/{{ $json.result.file_path }}",
+  "options": {}
+},
+"type": "n8n-nodes-base.httpRequest",
+"typeVersion": 4.3,
+"position": [
+  848,
+  512
+],
+"id": "4c55ffe3-2bb3-4b78-bc39-ded4e9dc2602",
+"name": "Download File",
+"alwaysOutputData": false
+},
+{
+"parameters": {
+  "jsCode": "// Loop sobre todos os itens que chegam (no seu caso, será apenas 1)\nfor (const item of $input.all()) {\n\n  // Pega o objeto binário 'data'\n  const binaryData = item.binary.data;\n\n  // Altera diretamente a propriedade Mime Type\n  binaryData.mimeType = 'image/jpeg';\n\n  // *** ADICIONE ESTA LINHA ***\n  // Salva o binário corrigido na nova propriedade 'image_file'\n  item.binary.image_file = binaryData;\n\n}\n\n// Retorna todos os itens modificados para o próximo nó\nreturn $input.all();"
+},
+"type": "n8n-nodes-base.code",
+"typeVersion": 2,
+"position": [
+  1072,
+  512
+],
+"id": "b84dea73-9921-4f15-b85b-ccf173059b1d",
+"name": "Fix MimeType"
+},
+{
+"parameters": {
+  "url": "=https://api.telegram.org/bot8414196696:AAHDyRYo7HU89iUKFw_dG5XtMfvsyUFWZgk/getFile?file_id={{ $('Telegram Trigger').item.json.message.voice.file_id }}",
+  "options": {}
+},
+"type": "n8n-nodes-base.httpRequest",
+"typeVersion": 4.3,
+"position": [
+  624,
+  336
+],
+"id": "838fc6b1-d2a5-4623-b77f-5e273dfaecf0",
+"name": "Get Audio Path"
+},
+{
+"parameters": {
+  "jsCode": "for (const item of $input.all()) {\n  const binaryData = item.binary.data;\n\n  // Corrige a etiqueta de MimeType para ogg\n  binaryData.mimeType = 'audio/ogg';\n\n  // Salva o binário corrigido na nova propriedade 'audio_file'\n  item.binary.audio_file = binaryData;\n}\nreturn $input.all();"
+},
+"type": "n8n-nodes-base.code",
+"typeVersion": 2,
+"position": [
+  1072,
+  336
+],
+"id": "de1e6a4a-4260-415f-9dc1-48726f182958",
+"name": "Fix Audio MimeType"
+},
+{
+"parameters": {
+  "url": "=https://api.telegram.org/file/bot8414196696:AAHDyRYo7HU89iUKFw_dG5XtMfvsyUFWZgk/{{ $json.result.file_path }}",
+  "options": {
+    "response": {
+      "response": {
+        "responseFormat": "file"
+      }
+    }
+  }
+},
+"type": "n8n-nodes-base.httpRequest",
+"typeVersion": 4.3,
+"position": [
+  832,
+  336
+],
+"id": "7cdcea82-21a2-484b-96d0-eb88e7dfb534",
+"name": "Download Audio"
+},
+{
+"parameters": {
+  "sessionIdType": "customKey",
+  "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+  "contextWindowLength": 10
+},
+"type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+"typeVersion": 1.3,
+"position": [
+  3328,
+  640
+],
+"id": "5504793d-e03b-4d8f-86bf-9b016e2ab40c",
+"name": "Simple Memory"
+}
+],
+"pinData": {},
+"connections": {
+"Edit Fields": {
+"main": [
+  [
+    {
+      "node": "AI Agent",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"AI Agent": {
+"main": [
+  [
+    {
+      "node": "Send a text message",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"É cadastrado?": {
+"main": [
+  [
+    {
+      "node": "Tem acesso?",
+      "type": "main",
+      "index": 0
+    }
+  ],
+  [
+    {
+      "node": "sem cadastro",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"Tem acesso?": {
+"main": [
+  [
+    {
+      "node": "identificador",
+      "type": "main",
+      "index": 0
+    }
+  ],
+  [
+    {
+      "node": "atingiu limite",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"Buscar AccountId": {
+"main": [
+  [
+    {
+      "node": "user_id",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"Edit Fields1": {
+"main": [
+  [
+    {
+      "node": "AI Agent",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"OpenAI": {
+"main": [
+  [
+    {
+      "node": "Edit Fields1",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"OpenAI1": {
+"main": [
+  [
+    {
+      "node": "Edit Fields4",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"Edit Fields4": {
+"main": [
+  [
+    {
+      "node": "AI Agent",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"Think": {
+"ai_tool": [
+  [
+    {
+      "node": "AI Agent",
+      "type": "ai_tool",
+      "index": 0
+    }
+  ]
+]
+},
+"OpenAI Chat Model1": {
+"ai_languageModel": [
+  [
+    {
+      "node": "Registrar Transacao",
+      "type": "ai_languageModel",
+      "index": 0
+    },
+    {
+      "node": "Generico",
+      "type": "ai_languageModel",
+      "index": 0
+    },
+    {
+      "node": "Deletar",
+      "type": "ai_languageModel",
+      "index": 0
+    },
+    {
+      "node": "Relatorios",
+      "type": "ai_languageModel",
+      "index": 0
+    }
+  ]
+]
+},
+"Registrar Transacao": {
+"ai_tool": [
+  [
+    {
+      "node": "AI Agent",
+      "type": "ai_tool",
+      "index": 0
+    }
+  ]
+]
+},
+"Registrar": {
+"ai_tool": [
+  [
+    {
+      "node": "Registrar Transacao",
+      "type": "ai_tool",
+      "index": 0
+    }
+  ]
+]
+},
+"Generico": {
+"ai_tool": [
+  [
+    {
+      "node": "AI Agent",
+      "type": "ai_tool",
+      "index": 0
+    }
+  ]
+]
+},
+"Deletar": {
+"ai_tool": [
+  [
+    {
+      "node": "AI Agent",
+      "type": "ai_tool",
+      "index": 0
+    }
+  ]
+]
+},
+"Excluir": {
+"ai_tool": [
+  [
+    {
+      "node": "Deletar",
+      "type": "ai_tool",
+      "index": 0
+    }
+  ]
+]
+},
+"Numero": {
+"main": [
+  [
+    {
+      "node": "Buscar AccountId",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"user_id": {
+"main": [
+  [
+    {
+      "node": "É cadastrado?",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"OpenAI Chat Model": {
+"ai_languageModel": [
+  [
+    {
+      "node": "AI Agent",
+      "type": "ai_languageModel",
+      "index": 0
+    }
+  ]
+]
+},
+"identificador": {
+"main": [
+  [
+    {
+      "node": "Switch1",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"buscar_transacoes": {
+"ai_tool": [
+  [
+    {
+      "node": "Relatorios",
+      "type": "ai_tool",
+      "index": 0
+    }
+  ]
+]
+},
+"Relatorios": {
+"ai_tool": [
+  [
+    {
+      "node": "AI Agent",
+      "type": "ai_tool",
+      "index": 0
+    }
+  ]
+]
+},
+"Switch": {
+"main": [
+  [
+    {
+      "node": "Get a row",
+      "type": "main",
+      "index": 0
+    }
+  ],
+  [
+    {
+      "node": "Get a row",
+      "type": "main",
+      "index": 0
+    }
+  ],
+  [
+    {
+      "node": "Get a row1",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"Get a row": {
+"main": [
+  [
+    {
+      "node": "If",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"If": {
+"main": [
+  [
+    {
+      "node": "Update a row1",
+      "type": "main",
+      "index": 0
+    }
+  ],
+  [
+    {
+      "node": "Create a row",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"Get a row1": {
+"main": [
+  [
+    {
+      "node": "Update a row2",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"Webhook1": {
+"main": [
+  [
+    {
+      "node": "Edit Fields3",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"Edit Fields3": {
+"main": [
+  [
+    {
+      "node": "Switch",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"Send a text message": {
+"main": [
+  [
+    {
+      "node": "Atualizar Transactions",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"Switch1": {
+"main": [
+  [
+    {
+      "node": "Get Audio Path",
+      "type": "main",
+      "index": 0
+    }
+  ],
+  [
+    {
+      "node": "Get File Path",
+      "type": "main",
+      "index": 0
+    }
+  ],
+  [
+    {
+      "node": "Edit Fields",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"Telegram Trigger": {
+"main": [
+  [
+    {
+      "node": "Numero",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"Get File Path": {
+"main": [
+  [
+    {
+      "node": "Download File",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"Download File": {
+"main": [
+  [
+    {
+      "node": "Fix MimeType",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"Fix MimeType": {
+"main": [
+  [
+    {
+      "node": "OpenAI1",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"Get Audio Path": {
+"main": [
+  [
+    {
+      "node": "Download Audio",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"Fix Audio MimeType": {
+"main": [
+  [
+    {
+      "node": "OpenAI",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"Download Audio": {
+"main": [
+  [
+    {
+      "node": "Fix Audio MimeType",
+      "type": "main",
+      "index": 0
+    }
+  ]
+]
+},
+"Simple Memory": {
+"ai_memory": [
+  [
+    {
+      "node": "Relatorios",
+      "type": "ai_memory",
+      "index": 0
+    }
+  ]
+]
+}
+},
+"active": true,
+"settings": {
+"executionOrder": "v1"
+},
+"versionId": "4c10631c-7b0e-4938-8445-22e9309c3c0a",
+"meta": {
+"instanceId": "fb7bde24efaa92ef756023edd17b1ca9984fdb2d9518e9f063586bc85dae267d"
+},
+"id": "QGaXrJkArYWqMtJd",
+"tags": [
+{
+"updatedAt": "2025-11-13T02:06:38.307Z",
+"createdAt": "2025-11-13T02:06:38.307Z",
+"id": "9GdjWH3f60XTfTPz",
+"name": "Alan Moreira"
+}
+]
+}

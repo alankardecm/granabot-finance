@@ -1,0 +1,7 @@
+{
+    "tipo": "despesa",
+    "descricao": "Teste n8n Webhook",
+    "categoria": "Alimentação",
+    "valor": 45.90,
+    "data_lancamento": "2025-11-19T12:00:00Z"
+}

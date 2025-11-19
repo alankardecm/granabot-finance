@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: granabot
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  backend:
+    build: ./backend
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/granabot?schema=public
+      JWT_SECRET: change-me
+      JWT_REFRESH_SECRET: change-me-refresh
+      JWT_TTL: 15m
+      JWT_REFRESH_TTL: 7d
+      WEB_APP_URL: http://localhost:5173
+    ports:
+      - "3000:3000"
+    command: ["npm", "run", "start:prod"]
+volumes:
+  db-data:
