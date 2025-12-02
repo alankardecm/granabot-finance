@@ -3,39 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GranaBot - Seu Assistente Financeiro no Telegram e WhatsApp</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>GranaBot - Seu Parceiro Financeiro no WhatsApp e Telegram</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #7c3aed;
-            --primary-dark: #6d28d9;
-            --secondary: #10b981;
-            --telegram: #0088cc;
-            --whatsapp: #25d366;
-            --dark: #1f2937;
-            --gray: #6b7280;
-            --light: #f3f4f6;
+            --primary: #00d4aa;
+            --primary-dark: #00b894;
+            --accent: #7c3aed;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #000000;
+            --dark-card: #0a0a0a;
+            --dark-light: #111111;
+            --gray: #888888;
+            --gray-light: #cccccc;
             --white: #ffffff;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        
         body {
             font-family: 'Inter', sans-serif;
             background: var(--dark);
             color: var(--white);
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
 
         /* Header */
         header {
@@ -44,595 +40,1580 @@
             width: 100%;
             top: 0;
             z-index: 100;
-            background: rgba(31, 41, 55, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        nav { display: flex; justify-content: space-between; align-items: center; }
 
         .logo {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--primary);
-        }
-
-        .nav-links a {
-            color: var(--white);
-            text-decoration: none;
-            margin-left: 30px;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-
-        /* Hero */
-        .hero {
-            padding: 150px 0 80px;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 48px;
-            font-weight: 800;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            font-size: 20px;
-            color: var(--gray);
-            max-width: 600px;
-            margin: 0 auto 40px;
-        }
-
-        /* Badge de canais */
-        .channels-badge {
-            display: inline-flex;
-            gap: 15px;
-            background: rgba(255,255,255,0.1);
-            padding: 15px 30px;
-            border-radius: 50px;
-            margin-bottom: 30px;
-        }
-
-        .channel-icon {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-weight: 600;
+            gap: 12px;
+            font-size: 26px;
+            font-weight: 800;
+            text-decoration: none;
+            color: var(--white);
         }
 
-        .channel-icon.telegram { color: var(--telegram); }
-        .channel-icon.whatsapp { color: var(--whatsapp); }
+        .logo span { color: var(--primary); }
 
-        /* Botões */
+        .nav-links { display: flex; gap: 32px; align-items: center; }
+        .nav-links a { color: var(--gray); text-decoration: none; font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover { color: var(--white); }
+
         .btn {
-            display: inline-block;
-            padding: 16px 32px;
-            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 50px;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s;
-            cursor: pointer;
             border: none;
-            font-size: 16px;
+            cursor: pointer;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: var(--white);
+            background: var(--primary);
+            color: var(--dark);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 212, 170, 0.3);
         }
 
-        .btn-telegram {
-            background: linear-gradient(135deg, #0088cc, #00a2e8);
-            color: var(--white);
+        /* Hero */
+        .hero {
+            padding: 160px 0 100px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-whatsapp {
-            background: linear-gradient(135deg, #25d366, #128c7e);
-            color: var(--white);
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 212, 170, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 50%, rgba(124, 58, 237, 0.08) 0%, transparent 50%);
         }
 
-        /* Seção de Escolha de Canal */
-        .channel-choice {
-            padding: 80px 0;
-            background: linear-gradient(180deg, transparent, rgba(124, 58, 237, 0.1));
-        }
-
-        .channel-choice h2 {
-            text-align: center;
-            font-size: 36px;
-            margin-bottom: 20px;
-        }
-
-        .channel-choice .subtitle {
-            text-align: center;
-            color: var(--gray);
-            margin-bottom: 50px;
-        }
-
-        .channels-grid {
+        .hero-content {
+            position: relative;
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
-            max-width: 800px;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 212, 170, 0.1);
+            border: 1px solid rgba(0, 212, 170, 0.3);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            color: var(--primary);
+            margin-bottom: 24px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero .subtitle {
+            font-size: 20px;
+            color: var(--gray);
+            margin-bottom: 16px;
+            line-height: 1.8;
+        }
+
+        .hero .emotional {
+            font-size: 18px;
+            color: var(--gray-light);
+            margin-bottom: 32px;
+            font-style: italic;
+            border-left: 3px solid var(--primary);
+            padding-left: 16px;
+        }
+
+        .hero-buttons { display: flex; gap: 16px; margin-bottom: 40px; }
+
+        .hero-trust {
+            display: flex;
+            gap: 32px;
+            padding-top: 32px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .trust-item { text-align: center; }
+        .trust-item .number { font-size: 28px; font-weight: 800; color: var(--primary); }
+        .trust-item .label { font-size: 13px; color: var(--gray); }
+
+        /* Phone Mockup */
+        .phone-mockup {
+            position: relative;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .phone-frame {
+            background: #1a1a1a;
+            border-radius: 45px;
+            padding: 12px;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.1);
+            max-width: 320px;
             margin: 0 auto;
         }
 
-        .channel-card {
-            background: rgba(255,255,255,0.05);
-            border: 2px solid rgba(255,255,255,0.1);
+        .phone-notch {
+            width: 120px;
+            height: 28px;
+            background: #000;
             border-radius: 20px;
-            padding: 40px;
+            margin: 0 auto 12px;
+        }
+
+        .phone-screen {
+            background: linear-gradient(180deg, #1e1e2e 0%, #0d0d15 100%);
+            border-radius: 35px;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: rgba(0, 212, 170, 0.1);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .chat-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .chat-name { font-weight: 600; font-size: 15px; }
+        .chat-status { font-size: 12px; color: var(--primary); }
+
+        .chat-messages {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 380px;
+        }
+
+        .msg {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 13px;
+            line-height: 1.5;
+            animation: msgAppear 0.5s ease-out;
+        }
+
+        @keyframes msgAppear {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .msg-user {
+            background: var(--accent);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .msg-bot {
+            background: rgba(255,255,255,0.1);
+            color: var(--white);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .msg-bot strong { color: var(--primary); }
+
+        /* Antes x Depois */
+        .comparison {
+            padding: 100px 0;
+            background: var(--dark-light);
+        }
+
+        .section-header {
             text-align: center;
+            max-width: 700px;
+            margin: 0 auto 60px;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: rgba(0, 212, 170, 0.1);
+            color: var(--primary);
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .section-header p { font-size: 18px; color: var(--gray); }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .comparison-card {
+            background: var(--dark-card);
+            border-radius: 24px;
+            padding: 40px;
+            border: 2px solid rgba(255,255,255,0.05);
+        }
+
+        .comparison-card.before { border-color: rgba(239, 68, 68, 0.3); }
+        .comparison-card.after { border-color: rgba(0, 212, 170, 0.3); }
+
+        .comparison-card h3 {
+            font-size: 24px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .comparison-card.before h3 { color: var(--danger); }
+        .comparison-card.after h3 { color: var(--primary); }
+
+        .comparison-card ul {
+            list-style: none;
+        }
+
+        .comparison-card li {
+            padding: 12px 0;
+            font-size: 15px;
+            color: var(--gray-light);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .comparison-card li:last-child { border-bottom: none; }
+
+        .comparison-card.before li::before {
+            content: "✕";
+            color: var(--danger);
+            font-weight: bold;
+        }
+
+        .comparison-card.after li::before {
+            content: "✓";
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .vs-circle {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--danger), var(--primary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 900;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        /* Depoimentos */
+        .testimonials {
+            padding: 100px 0;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .testimonial-card {
+            background: var(--dark-card);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 24px;
+            padding: 32px;
             transition: all 0.3s;
         }
 
-        .channel-card:hover {
+        .testimonial-card:hover {
             transform: translateY(-10px);
             border-color: var(--primary);
         }
 
-        .channel-card.telegram:hover { border-color: var(--telegram); }
-        .channel-card.whatsapp:hover { border-color: var(--whatsapp); }
-
-        .channel-card svg {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 20px;
+        .testimonial-stars {
+            color: var(--warning);
+            font-size: 18px;
+            margin-bottom: 16px;
         }
 
-        .channel-card h3 {
-            font-size: 28px;
-            margin-bottom: 10px;
+        .testimonial-text {
+            font-size: 15px;
+            color: var(--gray-light);
+            line-height: 1.8;
+            margin-bottom: 24px;
+            font-style: italic;
         }
 
-        .channel-card p {
-            color: var(--gray);
-            margin-bottom: 25px;
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
 
-        .channel-card .username {
-            font-size: 14px;
-            color: var(--gray);
-            margin-top: 15px;
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
         }
 
-        /* Seção de Planos */
+        .author-name { font-weight: 600; font-size: 15px; }
+        .author-role { font-size: 13px; color: var(--gray); }
+
+        /* Pricing */
         .pricing {
             padding: 100px 0;
-        }
-
-        .pricing h2 {
-            text-align: center;
-            font-size: 36px;
-            margin-bottom: 20px;
-        }
-
-        .pricing .subtitle {
-            text-align: center;
-            color: var(--gray);
-            margin-bottom: 60px;
+            background: var(--dark-light);
         }
 
         .pricing-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 25px;
+            gap: 24px;
         }
 
         .plan-card {
-            background: rgba(255,255,255,0.05);
-            border: 2px solid rgba(255,255,255,0.1);
+            background: var(--dark-card);
+            border: 2px solid rgba(255,255,255,0.05);
             border-radius: 24px;
-            padding: 35px 25px;
+            padding: 36px 28px;
             position: relative;
             transition: all 0.3s;
         }
 
         .plan-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary);
+            transform: translateY(-8px);
+            border-color: rgba(0, 212, 170, 0.3);
         }
 
         .plan-card.featured {
             border-color: var(--primary);
-            background: linear-gradient(180deg, rgba(124, 58, 237, 0.2), rgba(124, 58, 237, 0.05));
+            background: linear-gradient(180deg, rgba(0, 212, 170, 0.1) 0%, var(--dark-card) 100%);
         }
 
         .plan-badge {
             position: absolute;
-            top: -12px;
+            top: -14px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: var(--white);
-            padding: 6px 20px;
-            border-radius: 20px;
+            background: var(--primary);
+            color: var(--dark);
+            padding: 8px 20px;
+            border-radius: 50px;
             font-size: 12px;
             font-weight: 700;
         }
 
-        .plan-name {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 5px;
+        .plan-header {
+            text-align: center;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 24px;
         }
+
+        .plan-name { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
 
         .plan-channels {
             display: flex;
-            gap: 8px;
+            justify-content: center;
+            gap: 6px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
-        .plan-channels span {
+        .channel-tag {
             font-size: 11px;
             padding: 4px 10px;
             border-radius: 20px;
             font-weight: 600;
         }
 
-        .plan-channels .tg { background: rgba(0, 136, 204, 0.2); color: var(--telegram); }
-        .plan-channels .wpp { background: rgba(37, 211, 102, 0.2); color: var(--whatsapp); }
+        .channel-tag.tg { background: rgba(0, 136, 204, 0.2); color: #0088cc; }
+        .channel-tag.wpp { background: rgba(37, 211, 102, 0.2); color: #25d366; }
+        .channel-tag.ou { color: var(--gray); padding: 4px 6px; }
 
         .plan-price {
-            font-size: 42px;
+            font-size: 48px;
             font-weight: 800;
-            margin-bottom: 5px;
+            color: var(--white);
         }
 
-        .plan-price span {
-            font-size: 16px;
-            font-weight: 400;
-            color: var(--gray);
-        }
-
-        .plan-period {
-            font-size: 14px;
-            color: var(--gray);
-            margin-bottom: 25px;
-        }
+        .plan-price span { font-size: 18px; font-weight: 400; color: var(--gray); }
+        .plan-period { font-size: 14px; color: var(--gray); }
 
         .plan-features {
             list-style: none;
-            margin-bottom: 30px;
+            margin-bottom: 28px;
         }
 
         .plan-features li {
-            padding: 10px 0;
-            font-size: 14px;
             display: flex;
             align-items: center;
             gap: 10px;
+            padding: 10px 0;
+            font-size: 14px;
+            color: var(--gray-light);
         }
 
-        .plan-features li.included::before {
+        .plan-features li.yes::before {
             content: "✓";
-            color: var(--secondary);
+            width: 20px;
+            height: 20px;
+            background: rgba(0, 212, 170, 0.2);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
             font-weight: 700;
         }
 
-        .plan-features li.excluded {
+        .plan-features li.no {
             color: var(--gray);
-            text-decoration: line-through;
             opacity: 0.5;
         }
 
-        .plan-features li.excluded::before {
+        .plan-features li.no::before {
             content: "✕";
+            width: 20px;
+            height: 20px;
+            background: rgba(239, 68, 68, 0.2);
             color: #ef4444;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
         }
 
         .plan-btn {
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             border-radius: 12px;
             font-weight: 600;
+            font-size: 15px;
             cursor: pointer;
             transition: all 0.3s;
             border: 2px solid var(--primary);
             background: transparent;
             color: var(--primary);
+            text-decoration: none;
+            display: block;
+            text-align: center;
         }
 
         .plan-btn:hover {
             background: var(--primary);
-            color: var(--white);
+            color: var(--dark);
         }
 
         .plan-card.featured .plan-btn {
             background: var(--primary);
-            color: var(--white);
+            color: var(--dark);
+            border: none;
         }
 
-        .plan-card.featured .plan-btn:hover {
-            background: var(--primary-dark);
+        /* Features Grid */
+        .features {
+            padding: 100px 0;
         }
 
-        /* Garantia */
-        .guarantee {
-            padding: 80px 0;
-            text-align: center;
-            background: rgba(16, 185, 129, 0.1);
-            border-radius: 30px;
-            margin: 50px 20px;
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
         }
 
-        .guarantee h2 {
-            font-size: 32px;
+        .feature-card {
+            background: var(--dark-card);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 24px;
+            padding: 36px;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 212, 170, 0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
             margin-bottom: 20px;
         }
 
-        .guarantee p {
+        .feature-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            font-size: 15px;
             color: var(--gray);
-            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        /* FAQ */
+        .faq {
+            padding: 100px 0;
+        }
+
+        .faq-grid {
+            max-width: 800px;
             margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--dark-card);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 24px;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 16px;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-icon {
+            font-size: 24px;
+            color: var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            padding: 0 24px 24px;
+            color: var(--gray);
+            font-size: 15px;
+            line-height: 1.7;
+            display: none;
+        }
+
+        .faq-item.active .faq-answer { display: block; }
+
+        /* CTA */
+        .cta {
+            padding: 100px 0;
+            background: linear-gradient(180deg, var(--dark-light), var(--dark));
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .cta p {
+            font-size: 20px;
+            color: var(--gray);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-subtext {
+            margin-top: 20px;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .btn-telegram { background: #0088cc; color: white; }
+        .btn-whatsapp { background: #25d366; color: white; }
+
+        /* How it Works */
+        .how-it-works {
+            padding: 100px 0;
+            background: var(--dark);
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .step-card {
+            background: var(--dark-card);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 40px 25px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: var(--dark);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .step-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .step-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--white);
+        }
+
+        .step-card p {
+            font-size: 14px;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* Pricing */
+        .pricing {
+            padding: 100px 0;
+            background: linear-gradient(180deg, var(--dark-light) 0%, var(--dark) 100%);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-top: 60px;
+        }
+
+        .pricing-card {
+            background: var(--dark-card);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px;
+            padding: 40px 24px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 212, 170, 0.3);
+        }
+
+        .pricing-featured {
+            border: 2px solid var(--primary);
+            background: linear-gradient(180deg, rgba(0, 212, 170, 0.1) 0%, var(--dark-card) 100%);
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(0, 212, 170, 0.2);
+        }
+
+        .pricing-featured:hover {
+            transform: scale(1.05) translateY(-8px);
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: var(--dark);
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .pricing-header {
+            margin-bottom: 30px;
+        }
+
+        .plan-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 15px;
+        }
+
+        .plan-price {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .plan-price .currency {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-top: 8px;
+        }
+
+        .plan-price .amount {
+            font-size: 56px;
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1;
+        }
+
+        .plan-price .cents {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--gray);
+            margin-top: 8px;
+        }
+
+        .plan-period {
+            color: var(--gray);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 30px;
+            text-align: left;
+            flex-grow: 1;
+        }
+
+        .pricing-card .btn,
+        .pricing-card .btn-outline,
+        .pricing-card .btn-primary {
+            margin-top: auto;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .plan-features li {
+            padding: 8px 0;
+            font-size: 13px;
+            color: var(--gray);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            line-height: 1.4;
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        .plan-features li strong {
+            color: var(--white);
+        }
+
+        .pricing-note {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: var(--dark);
+        }
+
+        /* Channels */
+        .channels {
+            padding: 100px 0;
+            background: var(--dark);
+        }
+
+        .channels-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin-top: 60px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .channel-card {
+            background: var(--dark-card);
+            border: 2px solid rgba(255,255,255,0.05);
+            border-radius: 24px;
+            padding: 50px 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 420px;
+        }
+
+        .channel-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .telegram-card:hover {
+            border-color: #0088cc;
+            box-shadow: 0 20px 60px rgba(0, 136, 204, 0.2);
+        }
+
+        .whatsapp-card:hover {
+            border-color: #25d366;
+            box-shadow: 0 20px 60px rgba(37, 211, 102, 0.2);
+        }
+
+        .channel-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .channel-card h3 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--white);
+            margin-bottom: 15px;
+        }
+
+        .channel-card > p {
+            color: var(--gray);
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        .channel-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 30px;
+            flex-grow: 1;
+        }
+
+        .channel-card .btn {
+            margin-top: auto;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .channel-features li {
+            padding: 8px 0;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .channel-features li::before {
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        /* FAQ improvements */
+        .faq-list {
+            max-width: 800px;
+            margin: 60px auto 0;
+        }
+
+        .faq-icon {
+            font-size: 24px;
+            color: var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        /* Security */
+        .security {
+            padding: 80px 0;
+            background: linear-gradient(180deg, var(--dark) 0%, var(--dark-light) 100%);
+        }
+
+        .security-badges {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+
+        .security-badge {
+            background: var(--dark-card);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 30px 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .security-badge:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .badge-icon {
+            font-size: 36px;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .security-badge span:last-child {
+            color: var(--gray);
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.5;
         }
 
         /* Footer */
         footer {
-            padding: 50px 0;
+            padding: 60px 0 30px;
+            border-top: 1px solid rgba(255,255,255,0.05);
             text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.1);
         }
 
-        footer p {
-            color: var(--gray);
-        }
+        footer p { color: var(--gray); font-size: 14px; }
+        footer a { color: var(--primary); }
 
         /* Responsive */
+        @media (max-width: 1200px) {
+            .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+            .steps-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
         @media (max-width: 992px) {
-            .pricing-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .hero-content, .comparison-grid { grid-template-columns: 1fr; }
+            .phone-mockup { order: -1; }
+            .vs-circle { margin: 20px auto; }
+            .testimonials-grid, .features-grid { grid-template-columns: 1fr; }
+            .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+            .channels-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            .pricing-featured { transform: scale(1); }
+            .pricing-featured:hover { transform: translateY(-8px); }
         }
 
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 32px;
-            }
-
-            .channels-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .pricing-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .nav-links {
-                display: none;
-            }
+            .hero h1 { font-size: 36px; }
+            .section-header h2 { font-size: 32px; }
+            .section-title { font-size: 32px; }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .steps-grid { grid-template-columns: 1fr; }
+            .security-badges { gap: 20px; }
+            .security-badge { padding: 20px 30px; }
+            .cta h2 { font-size: 32px; }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
         <div class="container">
             <nav>
-                <div class="logo">🤖💰 GranaBot</div>
+                <a href="#" class="logo">🤖 Grana<span>Bot</span></a>
                 <div class="nav-links">
-                    <a href="#features">Recursos</a>
-                    <a href="#channels">Canais</a>
-                    <a href="#pricing">Planos</a>
+                    <a href="#funcionalidades">Funcionalidades</a>
+                    <a href="#precos">Preços</a>
+                    <a href="#faq">FAQ</a>
+                    <a href="#canais" class="btn btn-primary">Começar Grátis</a>
                 </div>
             </nav>
         </div>
     </header>
 
-    <!-- Hero -->
     <section class="hero">
         <div class="container">
-            <div class="channels-badge">
-                <span class="channel-icon telegram">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
-                    </svg>
-                    Telegram
-                </span>
-                <span class="channel-icon whatsapp">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                    </svg>
-                    WhatsApp
-                </span>
+            <div class="hero-content">
+                <div>
+                    <div class="hero-badge">✨ Chega de planilhas abandonadas!</div>
+                    <h1>Seu <span class="highlight">parceiro financeiro</span> no bolso, 24 horas por dia</h1>
+                    <p class="subtitle">Registre gastos em segundos pelo WhatsApp ou Telegram. Sem apps, sem login, sem complicação.</p>
+                    <p class="emotional">"Finalmente consegui controlar minhas finanças sem precisar de força de vontade"</p>
+                    <div class="hero-buttons">
+                        <a href="#canais" class="btn btn-primary">Experimentar Grátis →</a>
+                    </div>
+                    <div class="hero-trust">
+                        <div class="trust-item">
+                            <div class="number">500+</div>
+                            <div class="label">Usuários ativos</div>
+                        </div>
+                        <div class="trust-item">
+                            <div class="number">10k+</div>
+                            <div class="label">Transações registradas</div>
+                        </div>
+                        <div class="trust-item">
+                            <div class="number">4.9⭐</div>
+                            <div class="label">Avaliação média</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="phone-mockup">
+                    <div class="phone-frame">
+                        <div class="phone-notch"></div>
+                        <div class="phone-screen">
+                            <div class="chat-header">
+                                <div class="chat-avatar">🤖</div>
+                                <div>
+                                    <div class="chat-name">GranaBot</div>
+                                    <div class="chat-status">● Online</div>
+                                </div>
+                            </div>
+                            <div class="chat-messages">
+                                <div class="msg msg-user">11,90 em um salgado</div>
+                                <div class="msg msg-bot">
+                                    <strong>✅ Transação Registrada!</strong><br><br>
+                                    🆔 ID: 001<br>
+                                    💰 Valor: R$ 11,90<br>
+                                    📁 Categoria: Alimentação<br>
+                                    📅 Data: 2025-11-25
+                                </div>
+                                <div class="msg msg-user">relatório</div>
+                                <div class="msg msg-bot">
+                                    <strong>📊 RESUMO GERAL</strong><br><br>
+                                    🟢 Receitas: R$ 25.100<br>
+                                    🔴 Despesas: R$ 31.061<br>
+                                    💰 Saldo: R$ -5.961
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+    </section>
 
-            <h1>Seu Assistente Financeiro<br>no Telegram e WhatsApp</h1>
-            <p>Registre gastos por texto, áudio ou foto de nota fiscal. Relatórios automáticos com IA em segundos. Simples, rápido e inteligente.</p>
+    <section class="comparison" id="como-funciona">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">💡 A diferença</span>
+                <h2>Planilha vs GranaBot</h2>
+                <p>Veja por que você nunca mais vai abandonar seu controle financeiro</p>
+            </div>
+            <div class="comparison-grid">
+                <div class="comparison-card before">
+                    <h3>😤 Antes (Planilha)</h3>
+                    <ul>
+                        <li>Precisa abrir o computador/app</li>
+                        <li>Esquece de anotar e perde o controle</li>
+                        <li>Categorizar manualmente é chato</li>
+                        <li>Não tem onde você está (no mercado, restaurante...)</li>
+                        <li>Abandona depois de 2 semanas</li>
+                        <li>Relatórios? Só se souber Excel</li>
+                    </ul>
+                </div>
+                <div class="vs-circle">VS</div>
+                <div class="comparison-card after">
+                    <h3>😍 Depois (GranaBot)</h3>
+                    <ul>
+                        <li>Registra direto no WhatsApp/Telegram</li>
+                        <li>2 segundos pra registrar qualquer gasto</li>
+                        <li>IA categoriza automaticamente</li>
+                        <li>Funciona em qualquer lugar</li>
+                        <li>Vira hábito natural (como mandar msg)</li>
+                        <li>Relatórios prontos, só pedir</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials" id="depoimentos">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">💬 Depoimentos</span>
+                <h2>O que dizem nossos usuários</h2>
+                <p>Pessoas reais, resultados reais</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">"Já tentei 5 apps diferentes e sempre abandonava. O GranaBot é diferente porque está no WhatsApp que eu uso o dia todo. Nunca mais esqueci de anotar um gasto!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">M</div>
+                        <div>
+                            <div class="author-name">Mariana Silva</div>
+                            <div class="author-role">Designer, São Paulo</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">"A categorização automática é incrível! Eu só mando 'gastei 50 no mercado' e ele já entende tudo. Economizei 2 horas por mês que gastava organizando planilha."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">R</div>
+                        <div>
+                            <div class="author-name">Ricardo Mendes</div>
+                            <div class="author-role">Desenvolvedor, Curitiba</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">"Consegui identificar que estava gastando R$800/mês em delivery sem perceber. Em 2 meses economizei o valor de 1 ano do plano!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">C</div>
+                        <div>
+                            <div class="author-name">Camila Rocha</div>
+                            <div class="author-role">Advogada, Campinas</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Como Funciona -->
+    <section class="how-it-works" id="como-funciona">
+        <div class="container">
+            <h2 class="section-title">Como Funciona?</h2>
+            <p class="section-subtitle">Simples assim: conversa, registra, controla</p>
             
-            <a href="#channels" class="btn btn-primary">Começar Agora - 7 Dias Grátis</a>
-        </div>
-    </section>
-
-    <!-- Escolha de Canal -->
-    <section class="channel-choice" id="channels">
-        <div class="container">
-            <h2>Onde você quer usar o GranaBot?</h2>
-            <p class="subtitle">Escolha seu canal preferido ou use os dois (plano Pro+)</p>
-
-            <div class="channels-grid">
-                <!-- Telegram -->
-                <div class="channel-card telegram">
-                    <svg viewBox="0 0 24 24" fill="#0088cc">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
-                    </svg>
-                    <h3>Telegram</h3>
-                    <p>Rápido, leve e funciona em qualquer dispositivo</p>
-                    <a href="https://t.me/N8N_telegbot" class="btn btn-telegram" target="_blank">
-                        Abrir no Telegram
-                    </a>
-                    <p class="username">@N8N_telegbot</p>
+            <div class="steps-grid">
+                <div class="step-card" data-aos="fade-up">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">📱</div>
+                    <h3>Escolha seu canal</h3>
+                    <p>Telegram ou WhatsApp - você decide onde quer controlar suas finanças</p>
                 </div>
-
-                <!-- WhatsApp -->
-                <div class="channel-card whatsapp">
-                    <svg viewBox="0 0 24 24" fill="#25d366">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                    </svg>
-                    <h3>WhatsApp</h3>
-                    <p>O app que você já usa todo dia, agora com IA financeira</p>
-                    <a href="https://wa.me/5519996309592?text=Oi%20GranaBot" class="btn btn-whatsapp" target="_blank">
-                        Abrir no WhatsApp
-                    </a>
-                    <p class="username">(19) 99630-9592</p>
+                <div class="step-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">💬</div>
+                    <h3>Mande uma mensagem</h3>
+                    <p>"gastei 50 no mercado" ou "recebi 3000 de salário" - fale naturalmente</p>
+                </div>
+                <div class="step-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">🤖</div>
+                    <h3>IA categoriza tudo</h3>
+                    <p>O GranaBot entende, categoriza e registra automaticamente</p>
+                </div>
+                <div class="step-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="step-number">4</div>
+                    <div class="step-icon">📊</div>
+                    <h3>Veja seus relatórios</h3>
+                    <p>Peça "relatório do mês" e veja pra onde está indo seu dinheiro</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Planos -->
-    <section class="pricing" id="pricing">
+    <!-- Preços -->
+    <section class="pricing" id="precos">
         <div class="container">
-            <h2>Planos que Cabem no seu Bolso</h2>
-            <p class="subtitle">Escolha o plano ideal para você. Cancele quando quiser.</p>
-
+            <h2 class="section-title">Planos e Preços</h2>
+            <p class="section-subtitle">Escolha o plano ideal para o seu momento financeiro</p>
+            
             <div class="pricing-grid">
-                <!-- FREE -->
-                <div class="plan-card">
-                    <h3 class="plan-name">Free</h3>
-                    <div class="plan-channels">
-                        <span class="tg">Telegram</span>
-                        <span>OU</span>
-                        <span class="wpp">WhatsApp</span>
+                <!-- Free -->
+                <div class="pricing-card" data-aos="fade-up">
+                    <div class="pricing-header">
+                        <h3 class="plan-name">Free</h3>
+                        <div class="plan-price">
+                            <span class="currency">R$</span>
+                            <span class="amount">0</span>
+                        </div>
+                        <p class="plan-period">para sempre</p>
                     </div>
-                    <div class="plan-price">R$ 0</div>
-                    <p class="plan-period">para sempre</p>
                     <ul class="plan-features">
-                        <li class="included">50 mensagens/mês</li>
-                        <li class="included">1 canal (escolha um)</li>
-                        <li class="included">Registrar transações</li>
-                        <li class="included">Relatório básico</li>
-                        <li class="excluded">Áudio (Whisper)</li>
-                        <li class="excluded">Foto de cupons (OCR)</li>
-                        <li class="excluded">Dashboard Web</li>
+                        <li>✅ 1 canal (Telegram ou WhatsApp)</li>
+                        <li>✅ 50 mensagens/mês</li>
+                        <li>✅ Categorização automática</li>
+                        <li>✅ Relatório básico mensal</li>
+                        <li>❌ Áudio e imagens</li>
+                        <li>❌ Dashboard web</li>
+                        <li>❌ Exportação de dados</li>
                     </ul>
-                    <button class="plan-btn" onclick="location.href='#channels'">Começar Grátis</button>
+                    <a href="https://t.me/N8N_telegbot" class="btn btn-outline">Começar Grátis</a>
                 </div>
 
-                <!-- BÁSICO -->
-                <div class="plan-card">
-                    <h3 class="plan-name">Básico</h3>
-                    <div class="plan-channels">
-                        <span class="tg">Telegram</span>
-                        <span>OU</span>
-                        <span class="wpp">WhatsApp</span>
+                <!-- Básico -->
+                <div class="pricing-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="pricing-header">
+                        <h3 class="plan-name">Básico</h3>
+                        <div class="plan-price">
+                            <span class="currency">R$</span>
+                            <span class="amount">19</span>
+                            <span class="cents">,90</span>
+                        </div>
+                        <p class="plan-period">/mês</p>
                     </div>
-                    <div class="plan-price">R$ 19<span>,90</span></div>
-                    <p class="plan-period">por mês</p>
                     <ul class="plan-features">
-                        <li class="included">Mensagens ilimitadas</li>
-                        <li class="included">1 canal (escolha um)</li>
-                        <li class="included">Registrar transações</li>
-                        <li class="included">Relatórios detalhados</li>
-                        <li class="included">Áudio (fale seus gastos)</li>
-                        <li class="excluded">Foto de cupons (OCR)</li>
-                        <li class="excluded">Dashboard Web</li>
+                        <li>✅ 1 canal (Telegram ou WhatsApp)</li>
+                        <li>✅ <strong>Mensagens ilimitadas</strong></li>
+                        <li>✅ Categorização automática</li>
+                        <li>✅ Relatórios completos</li>
+                        <li>✅ <strong>Áudios (transcrição)</strong></li>
+                        <li>❌ Dashboard web</li>
+                        <li>❌ Exportação de dados</li>
                     </ul>
-                    <button class="plan-btn" onclick="location.href='#pagamento-basico'">Assinar Básico</button>
+                    <a href="https://t.me/N8N_telegbot" class="btn btn-outline">Assinar Básico</a>
                 </div>
 
-                <!-- PRO (Destaque) -->
-                <div class="plan-card featured">
-                    <span class="plan-badge">⭐ Mais Popular</span>
-                    <h3 class="plan-name">Pro</h3>
-                    <div class="plan-channels">
-                        <span class="tg">Telegram</span>
-                        <span class="wpp">WhatsApp</span>
+                <!-- Pro - Featured -->
+                <div class="pricing-card pricing-featured" data-aos="fade-up" data-aos-delay="200">
+                    <span class="featured-badge">⭐ Mais Popular</span>
+                    <div class="pricing-header">
+                        <h3 class="plan-name">Pro</h3>
+                        <div class="plan-price">
+                            <span class="currency">R$</span>
+                            <span class="amount">29</span>
+                            <span class="cents">,90</span>
+                        </div>
+                        <p class="plan-period">/mês</p>
                     </div>
-                    <div class="plan-price">R$ 29<span>,90</span></div>
-                    <p class="plan-period">por mês</p>
                     <ul class="plan-features">
-                        <li class="included">Mensagens ilimitadas</li>
-                        <li class="included">Telegram + WhatsApp</li>
-                        <li class="included">Registrar transações</li>
-                        <li class="included">Relatórios detalhados</li>
-                        <li class="included">Áudio (fale seus gastos)</li>
-                        <li class="included">Foto de cupons (OCR)</li>
-                        <li class="included">Dashboard Web</li>
+                        <li>✅ <strong>2 canais</strong> (Telegram + WPP)</li>
+                        <li>✅ Mensagens ilimitadas</li>
+                        <li>✅ Categorização automática</li>
+                        <li>✅ Relatórios completos</li>
+                        <li>✅ Áudios (transcrição)</li>
+                        <li>✅ <strong>OCR - Fotos de recibos</strong></li>
+                        <li>✅ <strong>Dashboard web</strong></li>
                     </ul>
-                    <button class="plan-btn" onclick="location.href='#pagamento-pro'">Assinar Pro</button>
+                    <a href="https://t.me/N8N_telegbot" class="btn btn-primary">Assinar Pro</a>
                 </div>
 
-                <!-- PREMIUM -->
-                <div class="plan-card">
-                    <h3 class="plan-name">Premium</h3>
-                    <div class="plan-channels">
-                        <span class="tg">Telegram</span>
-                        <span class="wpp">WhatsApp</span>
+                <!-- Premium -->
+                <div class="pricing-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="pricing-header">
+                        <h3 class="plan-name">Premium</h3>
+                        <div class="plan-price">
+                            <span class="currency">R$</span>
+                            <span class="amount">49</span>
+                            <span class="cents">,90</span>
+                        </div>
+                        <p class="plan-period">/mês</p>
                     </div>
-                    <div class="plan-price">R$ 49<span>,90</span></div>
-                    <p class="plan-period">por mês</p>
                     <ul class="plan-features">
-                        <li class="included">Tudo do Pro +</li>
-                        <li class="included">Suporte prioritário</li>
-                        <li class="included">Exportar Excel/PDF</li>
-                        <li class="included">API de integração</li>
-                        <li class="included">Múltiplas contas</li>
-                        <li class="included">Consultoria mensal</li>
-                        <li class="included">Backup automático</li>
+                        <li>✅ 2 canais (Telegram + WPP)</li>
+                        <li>✅ Mensagens ilimitadas</li>
+                        <li>✅ Categorização automática</li>
+                        <li>✅ Relatórios completos + Insights</li>
+                        <li>✅ Áudios + OCR</li>
+                        <li>✅ Dashboard web avançado</li>
+                        <li>✅ <strong>Suporte prioritário</strong></li>
+                        <li>✅ <strong>Exportação CSV/PDF</strong></li>
+                        <li>✅ <strong>Acesso à API</strong></li>
                     </ul>
-                    <button class="plan-btn" onclick="location.href='#pagamento-premium'">Assinar Premium</button>
+                    <a href="https://t.me/N8N_telegbot" class="btn btn-outline">Assinar Premium</a>
+                </div>
+            </div>
+
+            <p class="pricing-note">💳 Pagamento seguro via Kirvano • Cancele quando quiser</p>
+        </div>
+    </section>
+
+    <!-- Canais -->
+    <section class="channels" id="canais">
+        <div class="container">
+            <h2 class="section-title">Escolha Seu Canal Favorito</h2>
+            <p class="section-subtitle">O mesmo bot poderoso, na plataforma que você já usa</p>
+            
+            <div class="channels-grid">
+                <div class="channel-card telegram-card" data-aos="fade-right">
+                    <div class="channel-icon">📱</div>
+                    <h3>Telegram</h3>
+                    <p>Perfeito para quem quer velocidade e privacidade. Mensagens instantâneas e interface limpa.</p>
+                    <ul class="channel-features">
+                        <li>✓ Resposta ultra-rápida</li>
+                        <li>✓ Botões interativos</li>
+                        <li>✓ Grupos e canais</li>
+                        <li>✓ Maior privacidade</li>
+                    </ul>
+                    <a href="https://t.me/N8N_telegbot" class="btn btn-telegram">Abrir no Telegram →</a>
+                </div>
+                
+                <div class="channel-card whatsapp-card" data-aos="fade-left">
+                    <div class="channel-icon">💬</div>
+                    <h3>WhatsApp</h3>
+                    <p>Para quem prefere a praticidade do app que já está instalado. Familiar e acessível.</p>
+                    <ul class="channel-features">
+                        <li>✓ App que você já usa</li>
+                        <li>✓ Notificações familiares</li>
+                        <li>✓ Backup automático</li>
+                        <li>✓ Fácil compartilhamento</li>
+                    </ul>
+                    <a href="https://wa.me/5519996309592" class="btn btn-whatsapp">Abrir no WhatsApp →</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Garantia -->
-    <section class="guarantee">
+    <!-- FAQ -->
+    <section class="faq" id="faq">
         <div class="container">
-            <h2>🛡️ Garantia Total de 7 Dias</h2>
-            <p>Experimente sem riscos! Você tem 7 dias para testar o GranaBot. Não gostou? Devolvemos 100% do seu dinheiro. Sem perguntas, sem burocracia. Garantido pelo Código de Defesa do Consumidor.</p>
+            <h2 class="section-title">Perguntas Frequentes</h2>
+            <p class="section-subtitle">Tire suas dúvidas antes de começar</p>
+            
+            <div class="faq-list">
+                <div class="faq-item" data-aos="fade-up">
+                    <button class="faq-question">
+                        <span>Como o GranaBot entende o que eu escrevo?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Usamos inteligência artificial avançada (GPT-4) que entende linguagem natural. Você pode escrever "gastei 50 no mercado", "almocei fora 35 reais", ou até mandar um áudio dizendo "recebi meu salário de 3 mil hoje" - ele entende tudo!</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="50">
+                    <button class="faq-question">
+                        <span>Meus dados financeiros estão seguros?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Sim! Usamos criptografia de ponta a ponta. Seus dados são armazenados de forma segura no Supabase (mesma tecnologia de grandes empresas). Não vendemos nem compartilhamos seus dados com terceiros.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="100">
+                    <button class="faq-question">
+                        <span>Posso usar no Telegram e WhatsApp ao mesmo tempo?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Sim! Nos planos Pro e Premium você pode usar ambos os canais sincronizados. Registre um gasto no Telegram e veja no relatório do WhatsApp - tudo integrado.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="150">
+                    <button class="faq-question">
+                        <span>Como funciona o OCR de recibos?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Basta tirar uma foto do recibo ou nota fiscal e enviar. Nossa IA lê o texto da imagem, identifica o valor e a loja, e registra automaticamente. Funciona com cupons de supermercado, notas de restaurante, etc.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="200">
+                    <button class="faq-question">
+                        <span>Posso cancelar a qualquer momento?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Sim! Sem fidelidade, sem burocracia. Você pode cancelar diretamente pelo painel da Kirvano ou mandando uma mensagem pro suporte. Seus dados ficam salvos por 30 dias após o cancelamento.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="250">
+                    <button class="faq-question">
+                        <span>Tem como exportar meus dados?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No plano Premium você pode exportar todos os seus dados em CSV ou PDF. Perfeito para usar no Excel, Google Sheets, ou para declaração de imposto de renda.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Segurança -->
+    <section class="security" id="seguranca">
+        <div class="container">
+            <h2 class="section-title">Sua Segurança é Prioridade</h2>
+            <div class="security-badges">
+                <div class="security-badge" data-aos="zoom-in">
+                    <span class="badge-icon">🔒</span>
+                    <span>Criptografia<br>End-to-End</span>
+                </div>
+                <div class="security-badge" data-aos="zoom-in" data-aos-delay="100">
+                    <span class="badge-icon">🛡️</span>
+                    <span>LGPD<br>Compliant</span>
+                </div>
+                <div class="security-badge" data-aos="zoom-in" data-aos-delay="200">
+                    <span class="badge-icon">☁️</span>
+                    <span>Supabase<br>Cloud</span>
+                </div>
+                <div class="security-badge" data-aos="zoom-in" data-aos-delay="300">
+                    <span class="badge-icon">🚫</span>
+                    <span>Zero<br>Compartilhamento</span>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- CTA Final -->
-    <section class="hero" style="padding: 80px 0;">
+    <section class="cta">
         <div class="container">
-            <h2 style="font-size: 36px; margin-bottom: 20px;">Pronto para Controlar suas Finanças?</h2>
-            <p style="margin-bottom: 30px;">Junte-se a centenas de usuários que já controlam suas finanças pelo Telegram e WhatsApp</p>
-            <a href="#channels" class="btn btn-primary">Começar Agora - É Grátis!</a>
+            <h2>Pronto pra assumir o controle?</h2>
+            <p>Comece agora mesmo. Leva menos de 1 minuto e você já pode registrar seu primeiro gasto.</p>
+            <div class="cta-buttons">
+                <a href="https://t.me/N8N_telegbot" class="btn btn-telegram">📱 Abrir no Telegram</a>
+                <a href="https://wa.me/5519996309592" class="btn btn-whatsapp">💬 Abrir no WhatsApp</a>
+            </div>
+            <p class="cta-subtext">✨ Plano Free disponível • Sem cartão de crédito</p>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
-            <p>🤖💰 GranaBot © 2024 - Desenvolvido por <a href="https://amconsultoria.site" style="color: var(--primary);">AM Consultoria</a></p>
-            <p style="margin-top: 10px; font-size: 14px;">
-                <a href="#" style="color: var(--gray); margin: 0 10px;">Termos de Uso</a> |
-                <a href="#" style="color: var(--gray); margin: 0 10px;">Política de Privacidade</a> |
-                <a href="#" style="color: var(--gray); margin: 0 10px;">Contato</a>
-            </p>
+            <p>🤖 GranaBot © 2025 - Desenvolvido por <a href="https://amconsultoria.site">AM Consultoria</a></p>
         </div>
     </footer>
 
-    <!-- Script para links de pagamento (integrar com Kirvano) -->
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
     <script>
-        // Substitua esses links pelos links reais do Kirvano
-        const LINKS_PAGAMENTO = {
-            basico: 'https://pay.kirvano.com/SEU_LINK_BASICO',
-            pro: 'https://pay.kirvano.com/SEU_LINK_PRO',
-            premium: 'https://pay.kirvano.com/SEU_LINK_PREMIUM'
-        };
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out-cubic',
+            once: true,
+            offset: 100
+        });
 
-        // Quando tiver os links do Kirvano, atualize os onclick dos botões
-        // Exemplo: onclick="location.href='https://pay.kirvano.com/SEU_LINK'"
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const faqItem = button.parentElement;
+                const isActive = faqItem.classList.contains('active');
+                
+                // Close all FAQ items
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Open clicked one if it wasn't active
+                if (!isActive) {
+                    faqItem.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(0, 0, 0, 0.95)';
+                header.style.backdropFilter = 'blur(20px)';
+            } else {
+                header.style.background = 'rgba(0, 0, 0, 0.8)';
+            }
+        });
     </script>
 </body>
 </html>
