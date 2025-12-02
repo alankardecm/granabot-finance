@@ -793,16 +793,37 @@
             margin-top: 60px;
         }
 
+        .pricing-grid.three-cols {
+            grid-template-columns: repeat(3, 1fr);
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         .pricing-card {
             background: var(--dark-card);
             border: 1px solid rgba(255,255,255,0.08);
             border-radius: 24px;
-            padding: 40px 24px;
+            padding: 50px 30px 40px;
             text-align: center;
             position: relative;
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
+        }
+
+        .trial-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
         }
 
         .pricing-card:hover {
@@ -1085,6 +1106,7 @@
         /* Responsive */
         @media (max-width: 1200px) {
             .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+            .pricing-grid.three-cols { grid-template-columns: repeat(3, 1fr); }
             .steps-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
@@ -1093,7 +1115,7 @@
             .phone-mockup { order: -1; }
             .vs-circle { margin: 20px auto; }
             .testimonials-grid, .features-grid { grid-template-columns: 1fr; }
-            .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+            .pricing-grid, .pricing-grid.three-cols { grid-template-columns: repeat(2, 1fr); }
             .channels-grid { grid-template-columns: 1fr; }
             .nav-links { display: none; }
             .pricing-featured { transform: scale(1); }
@@ -1104,7 +1126,7 @@
             .hero h1 { font-size: 36px; }
             .section-header h2 { font-size: 32px; }
             .section-title { font-size: 32px; }
-            .pricing-grid { grid-template-columns: 1fr; }
+            .pricing-grid, .pricing-grid.three-cols { grid-template-columns: 1fr; }
             .steps-grid { grid-template-columns: 1fr; }
             .security-badges { gap: 20px; }
             .security-badge { padding: 20px 30px; }
@@ -1121,7 +1143,7 @@
                     <a href="#funcionalidades">Funcionalidades</a>
                     <a href="#precos">Preços</a>
                     <a href="#faq">FAQ</a>
-                    <a href="#canais" class="btn btn-primary">Começar Grátis</a>
+                    <a href="#precos" class="btn btn-primary">Testar 7 dias grátis</a>
                 </div>
             </nav>
         </div>
@@ -1136,7 +1158,7 @@
                     <p class="subtitle">Registre gastos em segundos pelo WhatsApp ou Telegram. Sem apps, sem login, sem complicação.</p>
                     <p class="emotional">"Finalmente consegui controlar minhas finanças sem precisar de força de vontade"</p>
                     <div class="hero-buttons">
-                        <a href="#canais" class="btn btn-primary">Experimentar Grátis →</a>
+                        <a href="#precos" class="btn btn-primary">Testar 7 dias grátis →</a>
                     </div>
                     <div class="hero-trust">
                         <div class="trust-item">
@@ -1307,33 +1329,12 @@
     <section class="pricing" id="precos">
         <div class="container">
             <h2 class="section-title">Planos e Preços</h2>
-            <p class="section-subtitle">Escolha o plano ideal para o seu momento financeiro</p>
+            <p class="section-subtitle">Teste grátis por 7 dias • Cancele quando quiser</p>
             
-            <div class="pricing-grid">
-                <!-- Free -->
-                <div class="pricing-card" data-aos="fade-up">
-                    <div class="pricing-header">
-                        <h3 class="plan-name">Free</h3>
-                        <div class="plan-price">
-                            <span class="currency">R$</span>
-                            <span class="amount">0</span>
-                        </div>
-                        <p class="plan-period">para sempre</p>
-                    </div>
-                    <ul class="plan-features">
-                        <li>✅ 1 canal (Telegram ou WhatsApp)</li>
-                        <li>✅ 50 mensagens/mês</li>
-                        <li>✅ Categorização automática</li>
-                        <li>✅ Relatório básico mensal</li>
-                        <li>❌ Áudio e imagens</li>
-                        <li>❌ Dashboard web</li>
-                        <li>❌ Exportação de dados</li>
-                    </ul>
-                    <a href="https://t.me/N8N_telegbot" class="btn btn-outline">Começar Grátis</a>
-                </div>
-
+            <div class="pricing-grid three-cols">
                 <!-- Básico -->
-                <div class="pricing-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="pricing-card" data-aos="fade-up">
+                    <span class="trial-badge">🎁 7 dias grátis</span>
                     <div class="pricing-header">
                         <h3 class="plan-name">Básico</h3>
                         <div class="plan-price">
@@ -1352,11 +1353,11 @@
                         <li>❌ Dashboard web</li>
                         <li>❌ Exportação de dados</li>
                     </ul>
-                    <a href="https://t.me/N8N_telegbot" class="btn btn-outline">Assinar Básico</a>
+                    <a href="https://t.me/N8N_telegbot" class="btn btn-outline">Testar 7 dias grátis</a>
                 </div>
 
                 <!-- Pro - Featured -->
-                <div class="pricing-card pricing-featured" data-aos="fade-up" data-aos-delay="200">
+                <div class="pricing-card pricing-featured" data-aos="fade-up" data-aos-delay="100">
                     <span class="featured-badge">⭐ Mais Popular</span>
                     <div class="pricing-header">
                         <h3 class="plan-name">Pro</h3>
@@ -1376,11 +1377,12 @@
                         <li>✅ <strong>OCR - Fotos de recibos</strong></li>
                         <li>✅ <strong>Dashboard web</strong></li>
                     </ul>
-                    <a href="https://t.me/N8N_telegbot" class="btn btn-primary">Assinar Pro</a>
+                    <a href="https://t.me/N8N_telegbot" class="btn btn-primary">Testar 7 dias grátis</a>
                 </div>
 
                 <!-- Premium -->
-                <div class="pricing-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="pricing-card" data-aos="fade-up" data-aos-delay="200">
+                    <span class="trial-badge">🎁 7 dias grátis</span>
                     <div class="pricing-header">
                         <h3 class="plan-name">Premium</h3>
                         <div class="plan-price">
@@ -1401,11 +1403,11 @@
                         <li>✅ <strong>Exportação CSV/PDF</strong></li>
                         <li>✅ <strong>Acesso à API</strong></li>
                     </ul>
-                    <a href="https://t.me/N8N_telegbot" class="btn btn-outline">Assinar Premium</a>
+                    <a href="https://t.me/N8N_telegbot" class="btn btn-outline">Testar 7 dias grátis</a>
                 </div>
             </div>
 
-            <p class="pricing-note">💳 Pagamento seguro via Kirvano • Cancele quando quiser</p>
+            <p class="pricing-note">💳 Pagamento seguro via Kirvano • Não gostou? Cancele em até 7 dias e não paga nada!</p>
         </div>
     </section>
 
@@ -1549,7 +1551,7 @@
                 <a href="https://t.me/N8N_telegbot" class="btn btn-telegram">📱 Abrir no Telegram</a>
                 <a href="https://wa.me/5519996309592" class="btn btn-whatsapp">💬 Abrir no WhatsApp</a>
             </div>
-            <p class="cta-subtext">✨ Plano Free disponível • Sem cartão de crédito</p>
+            <p class="cta-subtext">✨ 7 dias grátis para testar • Cancele quando quiser</p>
         </div>
     </section>
 
